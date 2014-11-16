@@ -2,6 +2,8 @@ package Model;
 
 import java.util.ArrayList;
 
+import Helper.DatabaseHelper;
+
 public class Instructor {
 
 	String name;
@@ -11,13 +13,14 @@ public class Instructor {
 	Department department;
 	ArrayList<Request> requests;
 	ArrayList<Course> teaches;
-	
+	DatabaseHelper dbh = new DatabaseHelper();
 	
 	public Instructor(String n, String s, String m, Department d) {
 		name = n;
 		surname = s;
 		mail = m;
 		department = d;
+		
 	}
 
   // GETTERS
@@ -91,5 +94,23 @@ public class Instructor {
 
 	public void setTeaches(ArrayList<Course> teaches) {
 		this.teaches = teaches;
+	}
+
+	// METHODS
+	
+	private boolean checkInstructorIsInDB(){
+		
+		ArrayList<Instructor> instructors = dbh.getAllInstructors(); 
+		boolean result = false;
+		
+		for(int i=0; i<instructors.size(); i++){
+			
+			if(this == instructors.get(i)){
+				result = true;
+				
+				// update teaching information
+			}
+		}
+		return result;
 	}
 }
