@@ -1,0 +1,186 @@
+package View;
+
+import java.awt.BorderLayout;
+public class InstructorView extends JFrame {
+
+	private JPanel contentPane;
+	private DatabaseHelper dbh;
+
+	private Instructor instructor;
+	private Course course;
+
+	Department[] departments;
+	Department selectedDept = null;
+	ArrayList<Assistant> filteredAssistants;
+	ArrayList<Assistant> allAss;
+	String[] assistantsInDept ;
+	/**
+	 * Create the frame.
+	 */
+	public InstructorView(Instructor ins) {
+
+		dbh = new DatabaseHelper();
+		allAss =  dbh.getAllAssistants();
+
+		instructor = ins;
+		final int personID = dbh.getPIDFromInstructor(instructor.id);
+		instructor.teaches = dbh.getTeachingInformationForInstructor(instructor.id);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+
+		JLabel lblInfo = new JLabel(ins.name +" "+ ins.surname);
+		lblInfo.setBounds(306, 6, 114, 16);
+		contentPane.add(lblInfo);
+
+
+		JLabel lblCourses = new JLabel("Courses");
+		lblCourses.setBounds(30, 40, 61, 16);
+		contentPane.add(lblCourses);
+
+		ArrayList<Instructor> c =null;
+
+		for(int i = 0; i < instructor.teaches.size(); i++){ // Bence burada dersi kadar alt alta Combo Box koyalim
+			int course_id= instructor.teaches.get(i).id;
+			c = dbh.getInstructorFromCourseID(course_id);
+			course = dbh.getCourseInfoFromID(course_id);
+		}
+
+		// JLabel a cekiyorum.	
+		int assistantCount = course.setMaxAssistantCount();
+		String astCount = ""+assistantCount;
+		//		AssistantCount = AssistantCount + 1;
+
+		System.out.println(astCount);
+
+		//		Integer []asstCountArray = new Integer[AssistantCount];
+		//		int dummy = 0;
+		//		for (int i =0; i<AssistantCount; i++){
+		//
+		//			asstCountArray[i]= dummy;
+		//			dummy++;
+		//
+		//		}
+
+
+
+
+		//System.out.println(c);
+
+		JComboBox cbCourses = new JComboBox(instructor.teaches.toArray()); // TODO
+		cbCourses.setBounds(103, 36, 107, 27);
+
+		contentPane.add(cbCourses);
+
+		JLabel cbAsstCount = new JLabel(astCount);
+		cbAsstCount.setBounds(368, 34, 61, 27);
+
+		contentPane.add(cbAsstCount);
+
+		JLabel lblAsstCount = new JLabel("Assistant Count");
+		lblAsstCount.setBounds(240, 40, 101, 16);
+		contentPane.add(lblAsstCount);
+
+
+
+		// Get dep names for combo boxes
+
+		ArrayList<Department> dn = dbh.getAllDepartments();
+		departments = new Department[dn.size()];
+		
+		for(int i = 0; i<departments.length; i++){
+			departments[i] = dn.get(i);
+		}
+
+		// Get all assistants
+		
+		Assistant[] assNames = new Assistant[allAss.size()];
+		assNames = allAss.toArray(assNames);
+
+		// Request comboboxes
+		for(int i=0; i<assistantCount; i++ ) {
+			int y = 30*i;
+
+			JComboBox cbDept = new JComboBox(departments);
+			cbDept.setBounds(30, 97+y, 134, 27);
+			contentPane.add(cbDept);
+			
+			
+			ItemListener itemListener = new ItemListener() {
+				public void itemStateChanged(ItemEvent itemEvent) {
+					int state = itemEvent.getStateChange();
+					System.out.println((state == ItemEvent.SELECTED) ? "Selected" : "Deselected");
+					// System.out.println("Item: " + );
+					String selected = (String)  itemEvent.getItem();
+					selected = selected.substring(1, 5);
+					
+					for(int i =0; i<departments.length; i++){
+						if(departments[i].code.compareToIgnoreCase(selected) == 0){
+							selectedDept = departments[i];
+						}
+					}
+
+					assistantsInDept = filterAssistantsAccordingToDepartment(selectedDept);
+				}
+			};
+			cbDept.addItemListener(itemListener);
+
+
+
+
+			JComboBox cbAsst = new JComboBox(assistantsInDept);
+			cbAsst.setBounds(176, 97+y, 139, 27);
+			contentPane.add(cbAsst);
+
+			JButton btnMakeReq = new JButton("Make Request");
+			btnMakeReq.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				}
+			});
+			btnMakeReq.setBounds(327, 96+y, 117, 29);
+			contentPane.add(btnMakeReq);
+
+
+		}// request cb end
+		if(ins.isAdmin){
+			JButton btnSettings = new JButton("Settings");
+			btnSettings.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+
+					SettingsView sv = new SettingsView(personID);
+					sv.setVisible(true);
+				}
+			});
+			btnSettings.setBounds(327, 243, 117, 29);
+			contentPane.add(btnSettings);
+		}
+	}
+	
+	
+	private String[] filterAssistantsAccordingToDepartment(Department d){
+		
+		ArrayList<String> filtered = new ArrayList<String>();
+		
+		for(int i =0; i<allAss.size(); i++){
+			Assistant a = allAss.get(i);
+			if(a.department.id == d.id){
+				filtered.add(a.toString());
+			}
+
+			
+		}
+		
+		String[] result = new String[filtered.size()];
+		result = filtered.toArray(result);
+		return result;
+		
+ 	}
+	
+	
+
+ 	
+}
