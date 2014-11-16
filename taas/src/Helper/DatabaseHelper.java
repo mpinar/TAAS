@@ -456,8 +456,9 @@ public class DatabaseHelper {
 			ps.setString(1, code);
 
 			ResultSet rs = ps.executeQuery();
-			if(rs.getInt("count") == 1){
-				while(rs.next()){
+
+			while(rs.next()){
+				if(rs.getInt("count") == 1){
 					String i = "" +rs.getInt("ID");
 					String n = rs.getString("department_name");
 					String f = rs.getString("faculty");
@@ -468,9 +469,9 @@ public class DatabaseHelper {
 					result.add(n);
 
 					result.add(f);
+				}else{
+					System.out.println("ERROR : More than 1 department");
 				}
-			}else{
-				System.out.println("ERROR : More than 1 department");
 			}
 
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
