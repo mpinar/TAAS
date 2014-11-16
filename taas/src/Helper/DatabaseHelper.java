@@ -150,9 +150,9 @@ public class DatabaseHelper {
 	 * @return
 	 */
 
-/*
- * username versyonu var zaten gerek kalmayabilir bu  methoda
- * 
+	/*
+	 * username versyonu var zaten gerek kalmayabilir bu  methoda
+	 * 
 	public Instructor getInstructorFromID(int insID){
 		Connection c;
 		Instructor ins = null;
@@ -181,7 +181,7 @@ public class DatabaseHelper {
 		return ins;
 
 	}
-*/
+	 */
 
 	/**
 	 * Returns the user after authorization from it's username
@@ -208,14 +208,14 @@ public class DatabaseHelper {
 				System.exit(1);
 			}else{
 				while(rs.next()){
-				//	int personID = rs.getInt("ID");
+					//	int personID = rs.getInt("ID");
 					String fname = rs.getString("name");
 					String lname = rs.getString("surname");
 					String mail = rs.getString("mail");
 					int d_id = rs.getInt("Department_ID");
 					Department  d = getDepartmentInformation(d_id);
 					ins = new Instructor(fname, lname, mail, d);
-			
+
 				}
 			}
 
@@ -227,7 +227,7 @@ public class DatabaseHelper {
 		return ins;
 	}
 
-/*
+	/*
 	public ArrayList<Course> getTeachingInformationForInstructor(int instrID){  // TODO
 		Connection c;
 		ArrayList<Course> coursesHistory = new ArrayList<Course>();
@@ -256,7 +256,7 @@ public class DatabaseHelper {
 		return coursesHistory;
 	}
 
-	*/
+	 */
 
 	/*
 
@@ -292,8 +292,8 @@ public class DatabaseHelper {
 	}
 
 
-*/
-	
+	 */
+
 	/*
 	public 	ArrayList<Instructor> getInstructorFromCourseID(int cID){ // TODO
 
@@ -337,8 +337,8 @@ public class DatabaseHelper {
 		return list;
 
 	}
-*/
-	
+	 */
+
 	public void updatePassword(int pID, String password){
 		Connection c;
 
@@ -411,4 +411,73 @@ public class DatabaseHelper {
 
 		return result;
 	}
+
+	public ArrayList<Instructor> getAllInstructors(){
+
+		Connection c; 
+		ArrayList<Instructor> result = new ArrayList<Instructor>();
+
+		try{
+
+			c = connectToDatabase();
+			String sql = "Select * from Instructor";
+			PreparedStatement ps = c.prepareStatement(sql);
+
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()){
+
+				String n = rs.getString("name");
+				String s = rs.getString("surname");
+				String m = rs.getString("mail");
+				Department d = getDepartmentInformation(rs.getInt("Department_ID"));
+
+				Instructor i = new Instructor(n, s, m, d);
+				result.add(i);
+			}
+
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public ArrayList<String> getMoreDeptInformation(String code) {
+		// TODO Auto-generated method stub
+		Connection c; 
+		ArrayList<String> result = new ArrayList<String>();
+
+		try{
+
+			c = connectToDatabase();
+			String sql = "Select count(ID) as count,Department.* from Department where code =? ";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, code);
+
+			ResultSet rs = ps.executeQuery();
+			if(rs.getInt("count") == 1){
+				while(rs.next()){
+					String i = "" +rs.getInt("ID");
+					String n = rs.getString("department_name");
+					String f = rs.getString("faculty");
+
+
+					result.add(i);
+
+					result.add(n);
+
+					result.add(f);
+				}
+			}else{
+				System.out.println("ERROR : More than 1 department");
+			}
+
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
 }
