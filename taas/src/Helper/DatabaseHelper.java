@@ -114,8 +114,6 @@ public class DatabaseHelper {
 	}
 
 
-	//select d.ID, i.ID from department as d join instructor as i on d.`ID` = i.`Department_ID` where i.`Department_ID` =1;
-
 	public Department getDepartmentInformation(int dept_id){
 
 		Connection c;
@@ -146,15 +144,24 @@ public class DatabaseHelper {
 
 	}
 
-	public Instructor getInstructorFromID(int personID){
+	/**
+	 *  Returns the instructor from it's ID 
+	 * @param insID
+	 * @return
+	 */
+
+/*
+ * username versyonu var zaten gerek kalmayabilir bu  methoda
+ * 
+	public Instructor getInstructorFromID(int insID){
 		Connection c;
 		Instructor ins = null;
 		try {
 			c = connectToDatabase();
-			String sql = "Select * from Instructor where person_id=?";
+			String sql = "Select * from Instructor where ID=?";
 
 			PreparedStatement ps = c.prepareStatement(sql);
-			ps.setInt(1, personID);
+			ps.setInt(1, insID);
 
 			ResultSet result = ps.executeQuery();
 
@@ -174,48 +181,20 @@ public class DatabaseHelper {
 		return ins;
 
 	}
-
-	public int getPIDFromInstructor(int insID){
-		Connection c;
-		int personID = 0;
-		try{
-			c = connectToDatabase();
-			String sql = "Select Person_ID from Instructor where ID =?";
-
-			PreparedStatement ps = c.prepareStatement(sql);
-			ps.setInt(1, insID);
-
-			ResultSet result = ps.executeQuery();
-
-			while(result.next()){
-				personID = result.getInt("Person_ID");
-			}
-			c.close();
-
-		} catch (InstantiationException | IllegalAccessException | SQLException e){
-			e.printStackTrace();
-		}
-
-		return personID;
-
-	}
-
-
-
-
+*/
 
 	/**
 	 * Returns the user after authorization from it's username
 	 * @param username
 	 * @return
 	 */
-	public Person getAuthorizedPerson(String username){
+	public Instructor getAuthorizedInstructor(String username){   // TODO
 
 		Connection c;
-		Person p = null;
+		Instructor ins = null;
 		try {
 			c = connectToDatabase();
-			String sql = "select count(id) as count, Person.*  from Person where mail =?";
+			String sql = "select count(id) as count, Instructor.*  from Instructor where mail=?";
 
 			PreparedStatement ps = c.prepareStatement(sql);
 			ps.setString(1, username);
@@ -229,17 +208,14 @@ public class DatabaseHelper {
 				System.exit(1);
 			}else{
 				while(rs.next()){
-					int personID = rs.getInt("ID");
+				//	int personID = rs.getInt("ID");
 					String fname = rs.getString("name");
 					String lname = rs.getString("surname");
 					String mail = rs.getString("mail");
-					if(rs.getInt("jobType") == 1) // Person is an Instructor
-					{
-						boolean isAdmin = rs.getBoolean("isAdmin");
-						p = new Person(personID, fname, lname, mail, isAdmin, JobType.INSTRUCTOR);
-					}else { // Person is an Assistant
-
-					}
+					int d_id = rs.getInt("Department_ID");
+					Department  d = getDepartmentInformation(d_id);
+					ins = new Instructor(fname, lname, mail, d);
+			
 				}
 			}
 
@@ -248,11 +224,11 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 
-		return p;
+		return ins;
 	}
 
-
-	public ArrayList<Course> getTeachingInformationForInstructor(int instrID){
+/*
+	public ArrayList<Course> getTeachingInformationForInstructor(int instrID){  // TODO
 		Connection c;
 		ArrayList<Course> coursesHistory = new ArrayList<Course>();
 		try {
@@ -280,48 +256,11 @@ public class DatabaseHelper {
 		return coursesHistory;
 	}
 
-	public ArrayList<AcademicStuff> getEventsForACourse(int cID){ // TODO
-		Connection c;
-		ArrayList<AcademicStuff> as = new ArrayList<AcademicStuff>();
-		AcademicStuff a = null;
-		try {
-			c = connectToDatabase();
-			String sql = "select * from section where Course_ID =? and semester =? AND year =?";
+	*/
 
-			PreparedStatement ps = c.prepareStatement(sql);
-			ps.setInt(1, cID); // course id   = 1
-			ps.setString(2, selectedSemester); // fall
-			ps.setInt(3, selectedYear); // 2014
+	/*
 
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()){
-
-				a = new AcademicStuff();
-				a.sectionNumber = rs.getInt("sectionNumber");
-
-
-				// TODO : burada sikinti var cok if elseif 
-				Academics ac = Academics.getAcademicStuff(rs.getInt("academicType"));
-				a.type = ac;
-
-				//Getting day
-				Day d = Day.getDayFromString(rs.getString("day"));
-				TimeSlot ts = TimeSlot.getTimeSlot(rs.getInt("timeslot"));
-				Pair<Day,TimeSlot> scheduled = new Pair<Day, TimeSlot>(d, ts);
-				a.time = scheduled;
-
-				as.add(a); // add this academic stuff to arraylist
-			}
-			c.close();
-
-		}catch (InstantiationException | IllegalAccessException | SQLException e) {
-			e.printStackTrace();
-		}
-
-		return as;
-	}
-
-	public Course getCourseInfoFromID(int cID){
+	public Course getCourseInfoFromID(int cID){ // TODO
 
 		Connection c;
 		Course course = null;
@@ -352,7 +291,11 @@ public class DatabaseHelper {
 		return course;
 	}
 
-	public 	ArrayList<Instructor> getInstructorFromCourseID(int cID){
+
+*/
+	
+	/*
+	public 	ArrayList<Instructor> getInstructorFromCourseID(int cID){ // TODO
 
 		Connection c;
 		Instructor ins = null;
@@ -394,7 +337,8 @@ public class DatabaseHelper {
 		return list;
 
 	}
-
+*/
+	
 	public void updatePassword(int pID, String password){
 		Connection c;
 
@@ -453,16 +397,13 @@ public class DatabaseHelper {
 
 			while(rs.next()){
 				int dept = rs.getInt("department_id");
-				int pID = rs.getInt("person_id");
-				int asstId = rs.getInt(1); // "ID"
 				String name = rs.getString("name");
 				String surname = rs.getString("surname");
 				String mail = rs.getString("mail");
-				boolean isAdmin = rs.getBoolean("isAdmin");
 				Department d = getDepartmentInformation(dept);
 
-				Assistant ass = new Assistant(asstId, d, pID, name, surname,mail, isAdmin );
-				result.add(ass);
+				Assistant asst = new Assistant(name,surname,mail,d);
+				result.add(asst);
 			}
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
