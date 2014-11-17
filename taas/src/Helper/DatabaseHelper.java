@@ -21,7 +21,8 @@ public class DatabaseHelper {
 	static final String DB_UNAME = "TAAS"; 
 	static final String DB_PASS = "SAAT";
 
-
+	public int year;
+	public String semester;
 	// Encryption properties
 	private EncryptionHelper bcrypt = null;
 
@@ -29,6 +30,8 @@ public class DatabaseHelper {
 
 		// Initialize the encyrptor object
 		bcrypt = new EncryptionHelper();
+		year = TimeStorage.year;
+		semester = TimeStorage.semester;
 	}
 
 	private Connection connectToDatabase() throws InstantiationException, IllegalAccessException{
@@ -112,25 +115,25 @@ public class DatabaseHelper {
 	}
 
 
-	public Department getDepartmentInformation(int dept_id){
+	public Department getDepartmentInformation(String code){
 
 		Connection c;
 		Department dept = null;
 		try {
 			c = connectToDatabase();
-			String sql = "Select * from Department where id=?";
+			String sql = "Select * from Department where code=?";
 
 			PreparedStatement ps = c.prepareStatement(sql);
-			ps.setInt(1, dept_id);
+			ps.setString(1, code);
 
 			ResultSet result = ps.executeQuery();
 
 			while(result.next()) {
 				String n = result.getString("department_name");
-				String code = result.getString("code");
+				String cc = result.getString("code");
 				String f = result.getString("faculty");
 
-				dept = new Department(dept_id, n, code, f);
+				dept = new Department(n, cc, f);
 			}
 
 			c.close();
@@ -211,8 +214,8 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 					String fname = rs.getString("name");
 					String lname = rs.getString("surname");
 					String mail = rs.getString("mail");
-					int d_id = rs.getInt("Department_ID");
-					Department  d = getDepartmentInformation(d_id);
+					String dcode = rs.getString("department_code");
+					Department  d = getDepartmentInformation(dcode);
 					ins = new Instructor(fname, lname, mail, d);
 
 				}
@@ -367,12 +370,12 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 			ResultSet rs = ps.executeQuery();
 
 			while(rs.next()){
-				int dept_id = rs.getInt("ID");
+				
 				String n = rs.getString("department_name");
 				String code = rs.getString("code");
 				String f = rs.getString("faculty");
 
-				Department dept = new Department(dept_id, n, code, f);
+				Department dept = new Department(n, code, f);
 				result.add(dept);
 			}
 
@@ -395,7 +398,7 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 			ResultSet rs = ps.executeQuery();
 
 			while(rs.next()){
-				int dept = rs.getInt("department_id");
+				String dept = rs.getString("department_code");
 				String name = rs.getString("name");
 				String surname = rs.getString("surname");
 				String mail = rs.getString("mail");
@@ -429,7 +432,7 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 				String n = rs.getString("name");
 				String s = rs.getString("surname");
 				String m = rs.getString("mail");
-				Department d = getDepartmentInformation(rs.getInt("Department_ID"));
+				Department d = getDepartmentInformation(rs.getString("department_code"));
 
 				Instructor i = new Instructor(n, s, m, d);
 				result.add(i);
@@ -450,7 +453,7 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 		try{
 
 			c = connectToDatabase();
-			String sql = "Select count(ID) as count,Department.* from Department where code =? ";
+			String sql = "Select count(code) as count,Department.* from Department where code =? ";
 			PreparedStatement ps = c.prepareStatement(sql);
 			ps.setString(1, code);
 
@@ -458,18 +461,12 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 
 			while(rs.next()){
 				if(rs.getInt("count") == 1){
-					String i = "" +rs.getInt("ID");
+					
 					String n = rs.getString("department_name");
 					String f = rs.getString("faculty");
 
-
-					result.add(i);
-
 					result.add(n);
-
 					result.add(f);
-				}else{
-					System.out.println("ERROR : More than 1 department");
 				}
 			}
 
@@ -486,14 +483,14 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 		
 		try{
 			c = connectToDatabase();
-			String sql = "insert into instructor (name,surname,mail,password,Department_ID) Values (?,?,?,?,?)";
+			String sql = "insert into instructor (name,surname,mail,password,department_code) Values (?,?,?,?,?)";
 			PreparedStatement ps = c.prepareStatement(sql);
 			ps.setString(1, instructor.name);
 			ps.setString(2, instructor.surname);
 			ps.setString(3, instructor.mail);
 			String password = bcrypt.generatePass(randomPass);
 			ps.setString(4, password);
-			ps.setInt(5, instructor.department.id);
+			ps.setString(5, instructor.department.code);
 			
 			ps.executeUpdate();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
@@ -502,4 +499,30 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 		
 	}
 
+	public void addCourseToDatabase(Course course) {
+		// TODO Auto-generated method stub
+		
+		Connection c;
+		try{	
+			c=connectToDatabase();
+			String sql = "insert into course (department_code, number, capacity, maxAssistantNumber,year,semester) values (?,?,?,?,?,?);";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1,course.code);
+			ps.setInt(2, course.number);
+			ps.setInt(3, course.capacity);
+			ps.setInt(4, course.maxAssistantNumber);
+			ps.setInt(5, year);
+			ps.setString(6, semester);
+			ps.executeUpdate();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void setYearAndSemester(int y, String s){
+		year = y;
+		semester = s;
+		
+	}
 }

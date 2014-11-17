@@ -24,6 +24,8 @@ public class ExcelHelper {
 	XSSFSheet assistants;
 	XSSFSheet courses;
 
+	public int year;
+	public String semester;
 
 	public ExcelHelper(String file){
 		try {
@@ -41,29 +43,39 @@ public class ExcelHelper {
 	}
 
 
-	private void getCoursesFromWorksheet() {
+	public void setYearAndSemester(int y, String s){
+		year = y;
+		semester = s;
 		
-		Iterator<Row> coursesRowIterator = courses.iterator();
-		Row dummyRow = coursesRowIterator.next();
-		while(coursesRowIterator.hasNext()){
+	}
+	public void getCoursesFromWorksheet() {
+		
+		if(courses != null){
+			Iterator<Row> coursesRowIterator = courses.iterator();
+			Row dummyRow = coursesRowIterator.next();
+			while(coursesRowIterator.hasNext()){
 
-			Row row = coursesRowIterator.next();
+				Row row = coursesRowIterator.next();
 
-			Cell codeCell = row.getCell(0);
-			Cell numberCell = row.getCell(1);
-			Cell capacityCell = row.getCell(2);
+				Cell codeCell = row.getCell(0);
+				Cell numberCell = row.getCell(1);
+				Cell capacityCell = row.getCell(2);
 
-			String code = codeCell.getStringCellValue();
-			int number = (int) numberCell.getNumericCellValue();
-			int capacity = (int) capacityCell.getNumericCellValue();
+				String code = codeCell.getStringCellValue();
+				int number = (int) numberCell.getNumericCellValue();
+				int capacity = (int) capacityCell.getNumericCellValue();
 
-			Course course = new Course(code, number, capacity);
+				if(!code.isEmpty()){
+					Course course = new Course(code, number, capacity);
+					course.addCourseToDatabase();
+				}
+				
+			}
 		}
 	}
-
 	public void getInstructorsFromWorksheet(){
 		// TODO hala yapilacak seyler var
-		
+
 		Iterator<Row> instructorRowIterator = instructors.iterator();
 		Row dummyRow = instructorRowIterator.next();
 
@@ -80,10 +92,10 @@ public class ExcelHelper {
 			String name = nameCell.getStringCellValue();
 			String surname = surnameCell.getStringCellValue();
 			String mail = mailCell.getStringCellValue();
-			String dept = deptCell.getStringCellValue();
+			String deptCode = deptCell.getStringCellValue();
 
-			if(!(name.isEmpty() || surname.isEmpty() || mail.isEmpty() || dept.isEmpty() )){
-				Department d = new Department(dept);
+			if(!(name.isEmpty() || surname.isEmpty() || mail.isEmpty() || deptCode.isEmpty() )){
+				Department d = new Department(deptCode);
 				Instructor ins = new Instructor(name, surname, mail, d);
 				if(!ins.checkInstructorIsInDB()){ // Instructor is not in the database. Add it.
 					//createRandomPassword 
@@ -94,8 +106,8 @@ public class ExcelHelper {
 				}
 			}else
 			{
-				System.out.println("Error on entry. \nName : "+name+"\nSurname : "+surname+"\nMail : "+mail+"\nDepartment_ID : "+dept);
-				System.out.println();
+//				System.out.println("Error on entry. \nName : "+name+"\nSurname : "+surname+"\nMail : "+mail+"\nDepartment_ID : "+deptCode);
+//				System.out.println();
 			}
 		}
 
