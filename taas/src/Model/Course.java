@@ -10,7 +10,7 @@ public class Course {
 	
 	public Course(String c, int n, int capacity) { 
 		code = c;
-		n = number;
+		number = n;
 		this.capacity = capacity;
 		setMaxAssistantNumber(capacity);
 	}
