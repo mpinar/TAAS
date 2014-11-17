@@ -8,7 +8,6 @@ public class Instructor {
 
 	public String name;
 	public String surname;
-
 	public String mail;
 	public Department department;
 	public ArrayList<Request> requests;
@@ -120,5 +119,9 @@ public class Instructor {
 	
 	public void setTeachingInformationFromDB(){
 		// TODO
+	}
+	
+	public void addTeachingInfoToDB(){
+		dbh.addTeachingInformationForInstructor(this);
 	}
 }

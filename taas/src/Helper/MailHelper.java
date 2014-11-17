@@ -1,6 +1,7 @@
 package Helper;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Properties;
 
@@ -12,6 +13,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import Model.Course;
 import Model.Instructor;
 
 
@@ -73,7 +75,10 @@ public class MailHelper {
 					InternetAddress.parse(i.getMail()));
 			message.setSubject("TA Assigner Password");
 			message.setText("Dear "+i.getName()+" "+i.getSurname()+
-					"\n\nYour password for TA Assigner application is: " + rp +"\nWe advise you to change your password with in the application.\n\nHave a nice day.");
+					"\n\nYour password for TA Assigner application is: " + rp +"\nWe advise you to change your password with in the application.\n\n"
+							+ "In "+ TimeStorage.year+" "+TimeStorage.semester+" "
+									+ " you are teaching: \n"+returnTeachingInfo(i.teaches)
+					+"\n\nHave a nice day.");
 
 			Transport.send(message);
 
@@ -84,7 +89,16 @@ public class MailHelper {
 	}
 
 
-
+	private String returnTeachingInfo(ArrayList<Course> courses){
+		
+		String s = "";
+		for (int i = 0; i < courses.size(); i++) {
+			
+			s += "- "+courses.get(i) +"\n";
+		}
+		
+		return s;
+	}
 
 
 }

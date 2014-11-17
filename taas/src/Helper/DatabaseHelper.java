@@ -71,13 +71,13 @@ public class DatabaseHelper {
 			ps.setString(1, username);
 
 			ResultSet rs = ps.executeQuery();
-			
+
 
 			while(rs.next()) {
-			if(rs.getInt("count") == 1)
-				res = rs.getString("password");
-			else
-				System.out.println("ERROR: More than 1 user with this email.");
+				if(rs.getInt("count") == 1)
+					res = rs.getString("password");
+				else
+					System.out.println("ERROR: More than 1 user with this email.");
 			}
 			c.close();
 		} catch (InstantiationException | IllegalAccessException | SQLException e) {
@@ -189,8 +189,8 @@ public class DatabaseHelper {
 	 * @param username
 	 * @return
 	 */
-	
-public Instructor getAuthorizedInstructor(String username){   // TODO
+
+	public Instructor getAuthorizedInstructor(String username){   // TODO
 
 		Connection c;
 		Instructor ins = null;
@@ -210,7 +210,7 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 				System.exit(1);
 			}else{
 				while(rs.next()){
-					
+
 					String fname = rs.getString("name");
 					String lname = rs.getString("surname");
 					String mail = rs.getString("mail");
@@ -352,9 +352,12 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 			ps.setInt(2, pID);
 
 			ps.executeQuery();
+			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
+		
+		
 	}
 
 
@@ -370,7 +373,7 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 			ResultSet rs = ps.executeQuery();
 
 			while(rs.next()){
-				
+
 				String n = rs.getString("department_name");
 				String code = rs.getString("code");
 				String f = rs.getString("faculty");
@@ -407,6 +410,8 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 				Assistant asst = new Assistant(name,surname,mail,d);
 				result.add(asst);
 			}
+			
+			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
@@ -437,7 +442,7 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 				Instructor i = new Instructor(n, s, m, d);
 				result.add(i);
 			}
-
+			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
@@ -461,7 +466,7 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 
 			while(rs.next()){
 				if(rs.getInt("count") == 1){
-					
+
 					String n = rs.getString("department_name");
 					String f = rs.getString("faculty");
 
@@ -469,7 +474,7 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 					result.add(f);
 				}
 			}
-
+c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
@@ -480,7 +485,7 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 	public void addInstructorToDatabase(Instructor instructor, String randomPass) {
 		// TODO Auto-generated method stub
 		Connection c;
-		
+
 		try{
 			c = connectToDatabase();
 			String sql = "insert into instructor (name,surname,mail,password,department_code) Values (?,?,?,?,?)";
@@ -491,17 +496,18 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 			String password = bcrypt.generatePass(randomPass);
 			ps.setString(4, password);
 			ps.setString(5, instructor.department.code);
-			
+
 			ps.executeUpdate();
+			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void addCourseToDatabase(Course course) {
 		// TODO Auto-generated method stub
-		
+
 		Connection c;
 		try{	
 			c=connectToDatabase();
@@ -514,15 +520,101 @@ public Instructor getAuthorizedInstructor(String username){   // TODO
 			ps.setInt(5, year);
 			ps.setString(6, semester);
 			ps.executeUpdate();
+			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
-		
+	
 	}
 
 	public void setYearAndSemester(int y, String s){
 		year = y;
 		semester = s;
+
+	}
+
+	public int getIDofInstructor(Instructor ins){
+		
+		Connection c; 
+		int id = 0 ;
+		try{
+			c = connectToDatabase();
+			String sql = "Select id from Instructor where mail = ?";
+			
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, ins.mail);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				id = rs.getInt("id");
+			}
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		
+		return id;
+		
+	}
+	public void addTeachingInformationForInstructor(Instructor instructor) {
+		// TODO Auto-generated method stub
+		Connection c; 
+
+		try{
+			c = connectToDatabase();
+			String sql1 = "select id from course where year = ? and semester= ? and department_code = ? and number = ?"; 
+			for(int i=0; i<instructor.teaches.size(); i++){
+				PreparedStatement ps = c.prepareStatement(sql1);
+				ps.setInt(1, year);
+				ps.setString(2, semester);
+				ps.setString(3, instructor.teaches.get(i).code);
+				ps.setInt(4, instructor.teaches.get(i).number);
+				
+				ResultSet rs = ps.executeQuery();
+				
+				while(rs.next()){
+					int instrID  = getIDofInstructor(instructor);
+					String sql2 = "Insert into teaches (Course_ID,Instructor_ID) values (?,?)";
+					PreparedStatement ps1 = c.prepareStatement(sql2);
+					ps1.setInt(1, rs.getInt("id"));
+					ps1.setInt(2, instrID);
+					
+					ps1.executeUpdate();
+				}
+
+			}
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+	}
+
+	public int getCourseCapacity(Course course) {
+		// TODO Auto-generated method stub
+		Connection c;
+		int capacity = 0;
+		
+		try{
+			c = connectToDatabase();
+			String sql = "Select capacity from course where department_code=? and number=?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			
+			ps.setString(1, course.code);
+			ps.setInt(2, course.number);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				capacity = rs.getInt("capacity");
+			}
+			
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		
+		return capacity;
 		
 	}
 }

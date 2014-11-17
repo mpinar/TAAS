@@ -124,8 +124,8 @@ public class AdminView extends JFrame {
 	}
 	
 	private void readExcel(){
-		eh.getInstructorsFromWorksheet();
 		eh.getCoursesFromWorksheet();
+		eh.getInstructorsFromWorksheet();
 		eh.getAssistantsFromWorksheet();
 		
 		

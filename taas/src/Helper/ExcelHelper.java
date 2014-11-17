@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -46,10 +47,10 @@ public class ExcelHelper {
 	public void setYearAndSemester(int y, String s){
 		year = y;
 		semester = s;
-		
+
 	}
 	public void getCoursesFromWorksheet() {
-		
+
 		if(courses != null){
 			Iterator<Row> coursesRowIterator = courses.iterator();
 			Row dummyRow = coursesRowIterator.next();
@@ -69,7 +70,7 @@ public class ExcelHelper {
 					Course course = new Course(code, number, capacity);
 					course.addCourseToDatabase();
 				}
-				
+
 			}
 		}
 	}
@@ -87,12 +88,13 @@ public class ExcelHelper {
 			Cell surnameCell = row.getCell(1);
 			Cell mailCell = row.getCell(2);
 			Cell deptCell = row.getCell(3);
-
+			Cell coursesCell = row.getCell(4);
 
 			String name = nameCell.getStringCellValue();
 			String surname = surnameCell.getStringCellValue();
 			String mail = mailCell.getStringCellValue();
 			String deptCode = deptCell.getStringCellValue();
+			String teaches = coursesCell.getStringCellValue();
 
 			if(!(name.isEmpty() || surname.isEmpty() || mail.isEmpty() || deptCode.isEmpty() )){
 				Department d = new Department(deptCode);
@@ -102,12 +104,22 @@ public class ExcelHelper {
 					MailHelper mh = new MailHelper();
 					String rp =  mh.generateRandomPassword();
 					ins.addToDB(rp);
+
+					//handle teaching information of the instructor.
+					String[] t = teaches.split(",");
+					ArrayList<Course> coursesTeaching = new ArrayList<Course>();
+					for(int i = 0; i<t.length; i++){
+						Course c = getCourseInformationForInstructor(t[i]);
+						coursesTeaching.add(c);
+					}
+					ins.teaches = coursesTeaching;
+					ins.addTeachingInfoToDB();
 					mh.sendEmail(ins,rp);
 				}
 			}else
 			{
-//				System.out.println("Error on entry. \nName : "+name+"\nSurname : "+surname+"\nMail : "+mail+"\nDepartment_ID : "+deptCode);
-//				System.out.println();
+				//				System.out.println("Error on entry. \nName : "+name+"\nSurname : "+surname+"\nMail : "+mail+"\nDepartment_ID : "+deptCode);
+				//				System.out.println();
 			}
 		}
 
@@ -137,6 +149,21 @@ public class ExcelHelper {
 			Department d = new Department(dept);
 			Assistant asst = new Assistant(name, surname, mail, d);
 		}
+
+	}
+
+	private Course getCourseInformationForInstructor(String input){
+
+		Course c = null;
+
+		String[] arr = input.split(" ",2);
+
+		String code = arr[0];
+		int number = Integer.parseInt(arr[1]);
+		c = new Course(code, number);
+
+
+		return c;
 
 	}
 }
