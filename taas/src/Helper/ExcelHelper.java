@@ -41,9 +41,9 @@ public class ExcelHelper {
 	}
 
 
-	private void getCoursesFromWorksheet(XSSFSheet coursesExcel) {
+	private void getCoursesFromWorksheet() {
 		
-		Iterator<Row> coursesRowIterator = coursesExcel.iterator();
+		Iterator<Row> coursesRowIterator = courses.iterator();
 		Row dummyRow = coursesRowIterator.next();
 		while(coursesRowIterator.hasNext()){
 
@@ -61,10 +61,10 @@ public class ExcelHelper {
 		}
 	}
 
-	public void getInstructorsFromWorksheet(XSSFSheet instructorExcel){
+	public void getInstructorsFromWorksheet(){
 		// TODO hala yapilacak seyler var
 		
-		Iterator<Row> instructorRowIterator = instructorExcel.iterator();
+		Iterator<Row> instructorRowIterator = instructors.iterator();
 		Row dummyRow = instructorRowIterator.next();
 
 		while(instructorRowIterator.hasNext()){
@@ -101,10 +101,10 @@ public class ExcelHelper {
 
 	}
 
-	public void getAssistantsFromWorksheet(XSSFSheet assistantExcel){
+	public void getAssistantsFromWorksheet(){
 
 
-		Iterator<Row> assistantRowIterator = assistantExcel.iterator();
+		Iterator<Row> assistantRowIterator = assistants.iterator();
 		Row dummyRow = assistantRowIterator.next();
 		while(assistantRowIterator.hasNext()){
 

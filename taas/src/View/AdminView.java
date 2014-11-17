@@ -2,11 +2,19 @@ package View;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.io.File;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JButton;
+
+import Helper.ExcelHelper;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class AdminView extends JFrame {
 
@@ -33,16 +41,26 @@ public class AdminView extends JFrame {
 	 */
 	public AdminView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(6, 6, 563, 427);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblAdmin = new JLabel("New label");
-		lblAdmin.setBounds(161, 106, 61, 16);
-		lblAdmin.setText("pepe cok uzuluyor");
-		contentPane.add(lblAdmin);
+		JFileChooser excelChooser = new JFileChooser();
+		excelChooser.setBounds(6, 6, 550, 400);
+		contentPane.add(excelChooser);
 		
+		int result = excelChooser.showOpenDialog(this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+		    File selectedFile = excelChooser.getSelectedFile();
+		    
+		    String excelLocation = selectedFile.getAbsolutePath();
+		    if(!excelLocation.isEmpty()){
+		    	ExcelHelper eh = new ExcelHelper(excelLocation);
+		    	eh.getInstructorsFromWorksheet();
+		    }
+		}
+				
 	}
 }
