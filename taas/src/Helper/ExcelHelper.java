@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -138,20 +140,58 @@ public class ExcelHelper {
 			Cell surnameCell = row.getCell(1);
 			Cell mailCell = row.getCell(2);
 			Cell deptCell = row.getCell(3);
+			Cell advisorCell = row.getCell(4);
+			Cell backgroundCell = row.getCell(5);
+			Cell teachingBackCell = row.getCell(6);
 
 			String name = nameCell.getStringCellValue();
 			String surname = surnameCell.getStringCellValue();
 			String mail = mailCell.getStringCellValue();
 			String dept = deptCell.getStringCellValue();
+			String advMail = advisorCell.getStringCellValue();
+			String background = backgroundCell.getStringCellValue();
+			String teachingBack = teachingBackCell.getStringCellValue();
 
-			System.out.println(name);
-
-			Department d = new Department(dept);
-			Assistant asst = new Assistant(name, surname, mail, d);
+			if(!mail.isEmpty()){
+				Department d = new Department(dept);
+				Assistant asst = new Assistant(name, surname, mail, d);
+				// handle background
+				List<String> bgl = Arrays.asList(background.split(","));
+				String[] arr = teachingBack.split(",");
+				ArrayList<String> tb = new ArrayList<String>();
+				for(int i = 0; i<arr.length; i++){
+					String s = parseString(arr[i]);
+					tb.add(s);
+				}
+				
+				ArrayList<String> bg = new ArrayList<String>();
+				for (Iterator iterator = bgl.iterator(); iterator.hasNext();) {
+					String s = (String) iterator.next();
+					bg.add(s);
+					
+				}
+				asst.background = bg;
+				asst.teachingBackground = tb;
+				asst.isActive = true;
+				asst.rawBG = background;
+				asst.rawTB = teachingBack;
+				asst.addAsstToDB();
+				asst.setAdvisorFromMail(advMail);
+			}
 		}
 
 	}
 
+	private String parseString(String in){
+		String s ="";
+		String[] arr = in.split(" ",2);
+		if(arr == null)
+		{
+			s = in;
+		}
+		s = arr[0] +" "+arr[1];
+		return s;
+	}
 	private Course getCourseInformationForInstructor(String input){
 
 		Course c = null;

@@ -356,8 +356,8 @@ public class DatabaseHelper {
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
-		
-		
+
+
 	}
 
 
@@ -410,7 +410,7 @@ public class DatabaseHelper {
 				Assistant asst = new Assistant(name,surname,mail,d);
 				result.add(asst);
 			}
-			
+
 			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
@@ -474,7 +474,7 @@ public class DatabaseHelper {
 					result.add(f);
 				}
 			}
-c.close();
+			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
@@ -524,7 +524,7 @@ c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
-	
+
 	}
 
 	public void setYearAndSemester(int y, String s){
@@ -534,17 +534,17 @@ c.close();
 	}
 
 	public int getIDofInstructor(Instructor ins){
-		
+
 		Connection c; 
 		int id = 0 ;
 		try{
 			c = connectToDatabase();
 			String sql = "Select id from Instructor where mail = ?";
-			
+
 			PreparedStatement ps = c.prepareStatement(sql);
 			ps.setString(1, ins.mail);
 			ResultSet rs = ps.executeQuery();
-			
+
 			while(rs.next()){
 				id = rs.getInt("id");
 			}
@@ -552,9 +552,9 @@ c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
-		
+
 		return id;
-		
+
 	}
 	public void addTeachingInformationForInstructor(Instructor instructor) {
 		// TODO Auto-generated method stub
@@ -569,16 +569,16 @@ c.close();
 				ps.setString(2, semester);
 				ps.setString(3, instructor.teaches.get(i).code);
 				ps.setInt(4, instructor.teaches.get(i).number);
-				
+
 				ResultSet rs = ps.executeQuery();
-				
+
 				while(rs.next()){
 					int instrID  = getIDofInstructor(instructor);
 					String sql2 = "Insert into teaches (Course_ID,Instructor_ID) values (?,?)";
 					PreparedStatement ps1 = c.prepareStatement(sql2);
 					ps1.setInt(1, rs.getInt("id"));
 					ps1.setInt(2, instrID);
-					
+
 					ps1.executeUpdate();
 				}
 
@@ -594,27 +594,122 @@ c.close();
 		// TODO Auto-generated method stub
 		Connection c;
 		int capacity = 0;
-		
+
 		try{
 			c = connectToDatabase();
 			String sql = "Select capacity from course where department_code=? and number=?";
 			PreparedStatement ps = c.prepareStatement(sql);
-			
+
 			ps.setString(1, course.code);
 			ps.setInt(2, course.number);
-			
+
 			ResultSet rs = ps.executeQuery();
-			
+
 			while(rs.next()){
 				capacity = rs.getInt("capacity");
 			}
-			
+
 			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
-		
+
 		return capacity;
-		
+
+	}
+
+	public Instructor getInstructorFromMail(String mail) {
+		// TODO Auto-generated method stub
+		Instructor i = null;
+		Connection c;
+		try{
+			c = connectToDatabase();
+			String sql = "Select * from Instructor where mail =?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, mail);
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()){
+				String n = rs.getString("name");
+				String s = rs.getString("surname");
+				Department d = getDepartmentInformation(rs.getString("department_code"));
+				i = new Instructor(n, s, mail, d);
+				i.id = rs.getInt("id");
+			}
+
+			c.close();
+
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return i;
+	}
+
+	public void insertAdvisorInfoForAssistant(Assistant assistant) {
+		Connection c;
+
+		try{
+			c = connectToDatabase();
+			// get assistant id
+			String sql="Insert into advisor(assistant_id,instructor_id) values (?,?)";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, assistant.id);
+			ps.setInt(2, assistant.advisor.id);
+
+			ps.executeUpdate();
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+	}
+
+	public int getAssistantID(Assistant assistant) {
+		// TODO Auto-generated method stub
+		int id = 0;
+		Connection c;
+
+		try{
+			c = connectToDatabase();
+			String sql = "Select id from assistant where mail = ?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, assistant.mail);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				id = rs.getInt("id");
+			}
+
+			c.close();	
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return id;
+	}
+
+	public void addAssistantToDB(Assistant assistant) {
+		// TODO Auto-generated method stub
+		Connection c;
+
+		try{
+			c = connectToDatabase();
+			String sql = "Insert into assistant (name,surname,mail,department_code,isActive,background,teachingBackground) values (?,?,?,?,?,?,?)"; 
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, assistant.name);
+			ps.setString(2, assistant.surname);
+			ps.setString(3, assistant.mail);
+			ps.setString(4, assistant.department.code);
+			ps.setBoolean(5, assistant.isActive);
+			ps.setString(6, assistant.rawBG);
+			ps.setString(7, assistant.rawTB);
+			ps.executeUpdate();
+			c.close();	
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
 	}
 }
