@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import Model.Assistant;
 import Model.Course;
 import Model.Department;
 import Model.Instructor;
@@ -73,6 +74,27 @@ public class ExcelHelper {
 					int capacity = (int) capacityCell.getNumericCellValue();
 					
 					Course course = new Course(code, number, capacity);
+				}
+				
+				Row dummyRow1 = assistantRowIterator.next();
+				while(assistantRowIterator.hasNext()){
+					
+					Row row= assistantRowIterator.next();
+					
+					Cell nameCell = row.getCell(0);
+					Cell surnameCell = row.getCell(1);
+					Cell mailCell = row.getCell(2);
+					Cell deptCell = row.getCell(3);
+					
+					String name = nameCell.getStringCellValue();
+					String surname = surnameCell.getStringCellValue();
+					String mail = mailCell.getStringCellValue();
+					String dept = deptCell.getStringCellValue();
+					
+					System.out.println(name);
+					
+					Department d = new Department(dept);
+					Assistant asst = new Assistant(name, surname, mail, d);
 				}
 
 
