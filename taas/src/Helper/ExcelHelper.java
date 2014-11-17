@@ -20,32 +20,25 @@ import Model.Instructor;
 public class ExcelHelper {
 	static String chosenFile = "TAAS EXCEL.xlsx";
 
-
-	public static void main(String []args){
-		/**
-		 * Gets the excel and parses it
-		 * @param choosenfile
-		 */
+	XSSFSheet instructors;
+	XSSFSheet assistants;
+	XSSFSheet courses;
 
 
-		//public void getDataFromExcelFile(String chosenFile){
+	public ExcelHelper(String file){
 		try {
-			FileInputStream file = new FileInputStream(chosenFile);
-			XSSFWorkbook workbook = new XSSFWorkbook(file);
+			FileInputStream excelFile = new FileInputStream(chosenFile);
+			XSSFWorkbook workbook = new XSSFWorkbook(excelFile);
 
 
-			XSSFSheet instructorExcel = workbook.getSheet("Instructors");
-			XSSFSheet assistantExcel = workbook.getSheet("Assistants");
-			XSSFSheet coursesExcel = workbook.getSheet("Courses");
-
-			ExcelHelper.getInstructorsFromWorksheet(instructorExcel);
-		
+			instructors = workbook.getSheet("Instructors");
+			assistants = workbook.getSheet("Assistants");
+			courses = workbook.getSheet("Courses");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}
-
 
 
 	private void getCoursesFromWorksheet(XSSFSheet coursesExcel) {
@@ -68,16 +61,15 @@ public class ExcelHelper {
 		}
 	}
 
-	public static void getInstructorsFromWorksheet(XSSFSheet instructorExcel){
-
+	public void getInstructorsFromWorksheet(XSSFSheet instructorExcel){
+		// TODO hala yapilacak seyler var
+		
 		Iterator<Row> instructorRowIterator = instructorExcel.iterator();
-
-
 		Row dummyRow = instructorRowIterator.next();
+
 		while(instructorRowIterator.hasNext()){
 
 			Row row = instructorRowIterator.next();
-
 
 			Cell nameCell = row.getCell(0);
 			Cell surnameCell = row.getCell(1);
@@ -109,11 +101,11 @@ public class ExcelHelper {
 
 	}
 
-	public static void getAssistantsFromWorksheet(XSSFSheet assistantExcel){
+	public void getAssistantsFromWorksheet(XSSFSheet assistantExcel){
 
 
 		Iterator<Row> assistantRowIterator = assistantExcel.iterator();
-		Row dummyRow1 = assistantRowIterator.next();
+		Row dummyRow = assistantRowIterator.next();
 		while(assistantRowIterator.hasNext()){
 
 			Row row= assistantRowIterator.next();
