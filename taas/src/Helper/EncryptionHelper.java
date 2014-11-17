@@ -748,4 +748,11 @@ public class EncryptionHelper {
 	public static boolean checkpw(String plaintext, String hashed) {
 		return (hashed.compareTo(hashpw(plaintext, hashed)) == 0);
 	}
+	
+	public static String generatePass(String password){
+
+		String hashed = hashpw(password, gensalt());
+		return hashed;
+
+		}
 }

@@ -30,7 +30,7 @@ public class MailHelper {
 	 * @return String suitable for use as a temporary password
 	 * 
 	 */
-	public static String generateRandomPassword()
+	public String generateRandomPassword()
 	{
 		// Pick from some letters that won't be easily mistaken for each
 		// other. So, for example, omit o O and 0, 1 l and L.
@@ -49,7 +49,7 @@ public class MailHelper {
 	 * Sends password information to an Instructor.
 	 * @param i
 	 */
-	public void sendEmail(Instructor i){
+	public void sendEmail(Instructor i, String rp){
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
@@ -73,7 +73,7 @@ public class MailHelper {
 					InternetAddress.parse(i.getMail()));
 			message.setSubject("TA Assigner Password");
 			message.setText("Dear "+i.getName()+" "+i.getSurname()+
-					"Your password for TA Assigner application is: " + generateRandomPassword());
+					"\n\nYour password for TA Assigner application is: " + rp +"\nWe advise you to change your password with in the application.\n\nHave a nice day.");
 
 			Transport.send(message);
 

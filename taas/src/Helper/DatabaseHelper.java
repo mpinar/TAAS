@@ -62,21 +62,19 @@ public class DatabaseHelper {
 		String res = "";
 		try {
 			c = connectToDatabase();
-			String sql = "Select * from Person where mail=?"; // TODO
+			String sql = "Select Instructor.*, count(ID) as count from Instructor where mail=?"; // TODO
 
 			PreparedStatement ps = c.prepareStatement(sql);
 			ps.setString(1, username);
 
-			ResultSet result = ps.executeQuery();
-			int count = 0;
+			ResultSet rs = ps.executeQuery();
+			
 
-			while(result.next()) {
-				if (count>1){
-					res = "";
-					break;
-				}
-				res = result.getString("password");
-				count++;	
+			while(rs.next()) {
+			if(rs.getInt("count") == 1)
+				res = rs.getString("password");
+			else
+				System.out.println("ERROR: More than 1 user with this email.");
 			}
 			c.close();
 		} catch (InstantiationException | IllegalAccessException | SQLException e) {
@@ -188,7 +186,8 @@ public class DatabaseHelper {
 	 * @param username
 	 * @return
 	 */
-	public Instructor getAuthorizedInstructor(String username){   // TODO
+	
+public Instructor getAuthorizedInstructor(String username){   // TODO
 
 		Connection c;
 		Instructor ins = null;
@@ -208,7 +207,7 @@ public class DatabaseHelper {
 				System.exit(1);
 			}else{
 				while(rs.next()){
-					//	int personID = rs.getInt("ID");
+					
 					String fname = rs.getString("name");
 					String lname = rs.getString("surname");
 					String mail = rs.getString("mail");
@@ -479,6 +478,28 @@ public class DatabaseHelper {
 		}
 
 		return result;
+	}
+
+	public void addInstructorToDatabase(Instructor instructor, String randomPass) {
+		// TODO Auto-generated method stub
+		Connection c;
+		
+		try{
+			c = connectToDatabase();
+			String sql = "insert into instructor (name,surname,mail,password,Department_ID) Values (?,?,?,?,?)";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, instructor.name);
+			ps.setString(2, instructor.surname);
+			ps.setString(3, instructor.mail);
+			String password = bcrypt.generatePass(randomPass);
+			ps.setString(4, password);
+			ps.setInt(5, instructor.department.id);
+			
+			ps.executeUpdate();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		
 	}
 
 }

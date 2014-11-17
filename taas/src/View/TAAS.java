@@ -83,26 +83,22 @@ public class TAAS {
 					av.setVisible(true);
 					frame.dispose();
 				}else{
-					
-//					if(dbh.authorizeUser(username, plainPassword)){
-//
-//						Person p = dbh.getAuthorizedPerson(username);
-//						System.out.println(p);
-//
-//						if(p.job == JobType.INSTRUCTOR || p.job == JobType.SUPER_INSTRUCTOR){
-//							Instructor ins = dbh.getInstructorFromID(p.id);
-//							ins.setSuperFields(p.name, p.surname, p.username, p.isAdmin);
-//							InstructorView iv = new InstructorView(ins);
-//							iv.setVisible(true);
-//							frame.dispose();
-//						}
-//
-//					}else {
-//						JOptionPane.showMessageDialog(frame,
-//								"\tInvalid username/password.\n\tPlease try again.",
-//								"Login Error",
-//								JOptionPane.ERROR_MESSAGE);
-//					}
+
+					if(dbh.authorizeUser(username, plainPassword)){
+
+						Instructor ins = dbh.getAuthorizedInstructor(username);
+						//System.out.println(ins);
+						InstructorView iv = new InstructorView(ins);
+						frame.dispose();
+						
+						try {
+							Thread.sleep(1750);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+						
+						iv.setVisible(true);
+					}
 
 				}
 			}

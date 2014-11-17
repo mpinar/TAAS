@@ -6,13 +6,13 @@ import Helper.DatabaseHelper;
 
 public class Instructor {
 
-	String name;
-	String surname;
-	String username;
-	String mail;
-	Department department;
-	ArrayList<Request> requests;
-	ArrayList<Course> teaches;
+	public String name;
+	public String surname;
+
+	public String mail;
+	public Department department;
+	public ArrayList<Request> requests;
+	public ArrayList<Course> teaches;
 	DatabaseHelper dbh = new DatabaseHelper();
 	
 	public Instructor(String n, String s, String m, Department d) {
@@ -32,11 +32,6 @@ public class Instructor {
 
 	public String getSurname() {
 		return surname;
-	}
-
-
-	public String getUsername() {
-		return username;
 	}
 
 
@@ -72,10 +67,6 @@ public class Instructor {
 	}
 
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 
 	public void setMail(String mail) {
 		this.mail = mail;
@@ -98,19 +89,36 @@ public class Instructor {
 
 	// METHODS
 	
-	private boolean checkInstructorIsInDB(){
+	public String toString(){
+		String s =	"Instructor\nName:"+ name + "\nSurname: "+surname ;
+				
+		return s;
+	}
+	
+	
+	public boolean checkInstructorIsInDB(){
 		
 		ArrayList<Instructor> instructors = dbh.getAllInstructors(); 
 		boolean result = false;
 		
 		for(int i=0; i<instructors.size(); i++){
 			
-			if(this == instructors.get(i)){
+			if(this.mail.compareToIgnoreCase(instructors.get(i).mail) == 0){
 				result = true;
-				
+				break;
 				// update teaching information
 			}
 		}
 		return result;
+	}
+
+	public void addToDB(String randomPassword) {
+	
+		dbh.addInstructorToDatabase(this, randomPassword);
+		
+	}
+	
+	public void setTeachingInformationFromDB(){
+		// TODO
 	}
 }
