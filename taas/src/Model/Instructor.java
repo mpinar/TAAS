@@ -20,6 +20,8 @@ public class Instructor {
 		surname = s;
 		mail = m;
 		department = d;
+		teaches = new ArrayList<Course>(); 
+		
 		
 	}
 

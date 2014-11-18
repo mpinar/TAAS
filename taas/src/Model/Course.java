@@ -9,6 +9,7 @@ public class Course {
 	public int number;
 	public int capacity;
 	public int maxAssistantNumber;
+	
 	DatabaseHelper dbh; 
 
 	public Course(String code, int num){

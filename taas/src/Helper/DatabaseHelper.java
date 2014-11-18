@@ -556,6 +556,7 @@ public class DatabaseHelper {
 		return id;
 
 	}
+	
 	public void addTeachingInformationForInstructor(Instructor instructor) {
 		// TODO Auto-generated method stub
 		Connection c; 

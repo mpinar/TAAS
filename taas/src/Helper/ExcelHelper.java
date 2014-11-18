@@ -76,6 +76,7 @@ public class ExcelHelper {
 			}
 		}
 	}
+	
 	public void getInstructorsFromWorksheet(){
 		// TODO hala yapilacak seyler var
 
@@ -107,21 +108,32 @@ public class ExcelHelper {
 					String rp =  mh.generateRandomPassword();
 					ins.addToDB(rp);
 
-					//handle teaching information of the instructor.
+					// TODO course handling might change
+					//handle teaching information of the instructor. 
+					
+					ins.teaches.add(parseCourseName(teaches));
+				
+					/*
 					String[] t = teaches.split(",");
 					ArrayList<Course> coursesTeaching = new ArrayList<Course>();
 					for(int i = 0; i<t.length; i++){
-						Course c = getCourseInformationForInstructor(t[i]);
+						Course c = parseCourseName(t[i]);
 						coursesTeaching.add(c);
 					}
 					ins.teaches = coursesTeaching;
+					*/
+					
 					ins.addTeachingInfoToDB();
 					mh.sendEmail(ins,rp);
+				}else{
+					 // The instructor is in the database
+					// update teaches and request information
+
+					ins.teaches.add(parseCourseName(teaches));
+					ins.addTeachingInfoToDB();
 				}
-			}else
-			{
-				//				System.out.println("Error on entry. \nName : "+name+"\nSurname : "+surname+"\nMail : "+mail+"\nDepartment_ID : "+deptCode);
-				//				System.out.println();
+			}else{
+				
 			}
 		}
 
@@ -192,7 +204,7 @@ public class ExcelHelper {
 		s = arr[0] +" "+arr[1];
 		return s;
 	}
-	private Course getCourseInformationForInstructor(String input){
+	private Course parseCourseName(String input){
 
 		Course c = null;
 
@@ -201,8 +213,6 @@ public class ExcelHelper {
 		String code = arr[0];
 		int number = Integer.parseInt(arr[1]);
 		c = new Course(code, number);
-
-
 		return c;
 
 	}
