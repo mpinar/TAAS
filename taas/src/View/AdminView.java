@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.io.File;
 
@@ -53,7 +54,7 @@ public class AdminView extends JFrame {
 	 */
 	public AdminView() {
 		dbh = new DatabaseHelper();
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(6, 6, 631, 163);
 		contentPane = new JPanel();
@@ -89,11 +90,16 @@ public class AdminView extends JFrame {
 		btnSaveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-//				int year = Integer.parseInt(tfYear.getText());
-//				String semester = (String) cbSemester.getSelectedItem(); 
-//				dbh.setYearAndSemester(year, semester);
-				TimeStorage.year = Integer.parseInt(tfYear.getText());
-				TimeStorage.semester =  (String) cbSemester.getSelectedItem();
+				int year =  Integer.parseInt(tfYear.getText());
+				String semester = (String) cbSemester.getSelectedItem();
+
+				String cd = "You have entered the following time information.\nYear as "+year+ "\nSemester as "+ semester +"\nDo you confirm that ?";
+				int option = JOptionPane.showConfirmDialog(getParent(), cd);
+
+				if(option == JOptionPane.YES_OPTION){
+					TimeStorage.year = year;
+					TimeStorage.semester = semester;
+				}
 
 			}
 		});
@@ -110,9 +116,11 @@ public class AdminView extends JFrame {
 					File selectedFile = fileChooser.getSelectedFile();
 					fileName = selectedFile.getName();
 					System.out.println(fileName);
-					JOptionPane.showMessageDialog(getParent(),"You selected the file named : "+fileName);
-					eh = new ExcelHelper(fileName);
-					readExcel();
+					int option = JOptionPane.showConfirmDialog(getParent(),"You selected the file named : "+fileName);
+					if(option == JOptionPane.YES_OPTION){
+						eh = new ExcelHelper(fileName);
+						readExcel();
+					}
 				}
 			}
 
@@ -122,12 +130,12 @@ public class AdminView extends JFrame {
 
 
 	}
-	
+
 	private void readExcel(){
 		eh.getCoursesFromWorksheet();
 		eh.getInstructorsFromWorksheet();
 		eh.getAssistantsFromWorksheet();
-		
-		
+
+
 	}
 }

@@ -204,7 +204,9 @@ public class ExcelHelper {
 		s = arr[0] +" "+arr[1];
 		return s;
 	}
+	
 	private Course parseCourseName(String input){
+
 
 		Course c = null;
 
