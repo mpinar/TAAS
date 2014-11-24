@@ -704,8 +704,8 @@ public class DatabaseHelper {
 			ps.setString(3, assistant.mail);
 			ps.setString(4, assistant.department.code);
 			ps.setBoolean(5, assistant.isActive);
-			ps.setString(6, assistant.rawBG);
-			ps.setString(7, assistant.rawTB);
+			ps.setString(6, assistant.getRawBG());
+			ps.setString(7, assistant.getRawTBG());
 			ps.executeUpdate();
 			c.close();	
 		}catch (InstantiationException | IllegalAccessException | SQLException e){

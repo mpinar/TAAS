@@ -120,6 +120,7 @@ public class AdminView extends JFrame {
 					if(option == JOptionPane.YES_OPTION){
 						eh = new ExcelHelper(fileName);
 						readExcel();
+						JOptionPane.showMessageDialog(getParent(), "Operation Excel reading is complete.");
 					}
 				}
 			}

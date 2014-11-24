@@ -16,7 +16,7 @@ public class Assistant {
 	public Instructor advisor;
 	public ArrayList<String> background;
 	public ArrayList<String> teachingBackground;
-	public String rawBG, rawTB;
+	private String rawBG, rawTBG;
 	
 	public boolean isActive;
 	DatabaseHelper dbh;
@@ -28,10 +28,32 @@ public class Assistant {
 		mail = m;
 		department = d;
 		dbh = new DatabaseHelper();
+		background = new ArrayList<String>();
+		teachingBackground = new ArrayList<String>();
 
 	}
 	
 	
+	public String getRawBG() {
+		return rawBG;
+	}
+
+
+	public String getRawTBG() {
+		return rawTBG;
+	}
+
+
+	public void setRawBG(String rawBG) {
+		this.rawBG = rawBG;
+	}
+
+
+	public void setRawTBG(String rawTBG) {
+		this.rawTBG = rawTBG;
+	}
+
+
 	public void setAdvisorFromMail(String mail){
 	advisor = dbh.getInstructorFromMail(mail);
 	setAssistantID();

@@ -51,6 +51,7 @@ public class ExcelHelper {
 		semester = s;
 
 	}
+
 	public void getCoursesFromWorksheet() {
 
 		if(courses != null){
@@ -108,29 +109,26 @@ public class ExcelHelper {
 					String rp =  mh.generateRandomPassword();
 					ins.addToDB(rp);
 
-					// TODO course handling might change
+					// course handling might change
 					//handle teaching information of the instructor. 
-					
-					ins.teaches.add(parseCourseName(teaches));
-				
-					/*
+					teaches = teaches.replaceAll(", ",",");
 					String[] t = teaches.split(",");
-					ArrayList<Course> coursesTeaching = new ArrayList<Course>();
-					for(int i = 0; i<t.length; i++){
-						Course c = parseCourseName(t[i]);
-						coursesTeaching.add(c);
+
+				
+					for (String s : t) {
+						Course c = createCourseFromString(s);
+						ins.teaches.add(c);
 					}
-					ins.teaches = coursesTeaching;
-					*/
+			
 					
 					ins.addTeachingInfoToDB();
 					mh.sendEmail(ins,rp);
 				}else{
 					 // The instructor is in the database
 					// update teaches and request information
-
-					ins.teaches.add(parseCourseName(teaches));
-					ins.addTeachingInfoToDB();
+//
+//					ins.teaches.add(parseCourseName(teaches));
+//					ins.addTeachingInfoToDB();
 				}
 			}else{
 				
@@ -167,26 +165,18 @@ public class ExcelHelper {
 			if(!mail.isEmpty()){
 				Department d = new Department(dept);
 				Assistant asst = new Assistant(name, surname, mail, d);
+			
 				// handle background
-				List<String> bgl = Arrays.asList(background.split(","));
-				String[] arr = teachingBack.split(",");
-				ArrayList<String> tb = new ArrayList<String>();
-				for(int i = 0; i<arr.length; i++){
-					String s = parseString(arr[i]);
-					tb.add(s);
-				}
+
+				background = background.replaceAll(", ",",");
+				asst.setRawBG(background);
+				asst.background  = convertBackgroundToList(background);
+
+				teachingBack = teachingBack.replace(", ",",");
+				asst.setRawTBG(teachingBack);
+				asst.teachingBackground = convertBackgroundToList(teachingBack);
 				
-				ArrayList<String> bg = new ArrayList<String>();
-				for (Iterator iterator = bgl.iterator(); iterator.hasNext();) {
-					String s = (String) iterator.next();
-					bg.add(s);
-					
-				}
-				asst.background = bg;
-				asst.teachingBackground = tb;
 				asst.isActive = true;
-				asst.rawBG = background;
-				asst.rawTB = teachingBack;
 				asst.addAsstToDB();
 				asst.setAdvisorFromMail(advMail);
 			}
@@ -194,18 +184,19 @@ public class ExcelHelper {
 
 	}
 
-	private String parseString(String in){
-		String s ="";
-		String[] arr = in.split(" ",2);
-		if(arr == null)
-		{
-			s = in;
+	private ArrayList<String> convertBackgroundToList(String in){
+		ArrayList<String> al = new ArrayList<String>();
+		String[] arr = in.split(",");
+		for (int i = 0; i < arr.length; i++) {
+			String s = arr[i];
+			al.add(s);
 		}
-		s = arr[0] +" "+arr[1];
-		return s;
+		
+		return al;
+
 	}
 	
-	private Course parseCourseName(String input){
+	private Course createCourseFromString(String input){
 
 
 		Course c = null;
