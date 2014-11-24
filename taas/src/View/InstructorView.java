@@ -13,21 +13,26 @@ import Model.Course;
 import Model.Instructor;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.ScrollPaneConstants;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class InstructorView extends JFrame {
 
 	private JPanel contentPane;
 	private Instructor instructor;
 	private DatabaseHelper dbh;
-	private JTextField textField;
+	private JTextField tfAdditionalRequest;
+	private int messageCount = 0;
 
 	/**
 	 * Create the frame.
@@ -70,7 +75,7 @@ public class InstructorView extends JFrame {
 		}
 		
 		
-		JComboBox cbTeaching = new JComboBox(arr);
+		final JComboBox cbTeaching = new JComboBox(arr);
 		cbTeaching.setBounds(112, 49, 178, 27);
 		contentPane.add(cbTeaching);
 		
@@ -78,17 +83,48 @@ public class InstructorView extends JFrame {
 		lblAdditionalRequest.setBounds(28, 377, 460, 16);
 		contentPane.add(lblAdditionalRequest);
 		
-		textField = new JTextField();
-		textField.setBounds(172, 371, 316, 28);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		tfAdditionalRequest = new JTextField();
+		tfAdditionalRequest.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if(messageCount == 0){
+				JOptionPane.showMessageDialog(getParent()
+						, "The requests should be seperated with commas(,).\nExample: Java, INDR");
+				messageCount++;
+				}
+			}
+		});
+		tfAdditionalRequest.setBounds(172, 371, 316, 28);
+		contentPane.add(tfAdditionalRequest);
+		tfAdditionalRequest.setColumns(10);
 	
 		//createRequestPanel(); // selected dersin max asst sayisi
 		
-		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(533, 372, 117, 29);
-		btnSave.setToolTipText("Saves addtional request.");
-		contentPane.add(btnSave);
+		JButton btnSaveAdditionalRequest = new JButton("Save");
+		btnSaveAdditionalRequest.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				// Create course;
+				String s = (String) cbTeaching.getSelectedItem();
+				String[] sarr = s.split(" ");
+				Course c = new Course(sarr[0], Integer.parseInt(sarr[1]));
+			
+				String additionalReq = tfAdditionalRequest.getText();
+				boolean updated = instructor.setAdditionalRequestForCourse(c,additionalReq);
+				
+				if(updated){
+					JOptionPane.showMessageDialog(getParent(), "Your request is saved","Success",JOptionPane.INFORMATION_MESSAGE);
+				}else{
+					JOptionPane.showMessageDialog(getParent(),
+						    "An error ocurred while saving your request. Try again.",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		btnSaveAdditionalRequest.setBounds(533, 372, 117, 29);
+		btnSaveAdditionalRequest.setToolTipText("Saves addtional request.");
+		contentPane.add(btnSaveAdditionalRequest);
 	}
 	
 	private void createRequestPanel(int max){

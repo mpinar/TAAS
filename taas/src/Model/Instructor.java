@@ -134,4 +134,10 @@ public class Instructor {
 		return id;
 		
 	}
+
+	public boolean setAdditionalRequestForCourse(Course c, String additionalReq) {
+		// TODO Auto-generated method stub
+		return dbh.saveAdditionalRequestForCourse(c, this.id, additionalReq);
+		
+	}
 }

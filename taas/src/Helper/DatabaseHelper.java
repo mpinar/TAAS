@@ -10,6 +10,8 @@ package Helper;
 import java.sql.*;
 import java.util.ArrayList;
 
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+
 import Model.*;
 
 public class DatabaseHelper {
@@ -772,5 +774,49 @@ public class DatabaseHelper {
 		
 		return result;
 		
+	}
+
+	public boolean saveAdditionalRequestForCourse(Course course,int iID, String additionalReq) {
+
+		// TODO isActive olayi
+		
+		Connection c; 
+		
+		boolean result = false;
+		try{
+			c = connectToDatabase();
+			String sql = "Select id, count(id) as count from course where department_code=? and number=?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, course.code);
+			ps.setInt(2, course.number);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				if(rs.getInt("count")==1){
+					int cid = rs.getInt("id");
+					sql = "update teaches set backgroundrequest = ? where course_id =? and instructor_id =?";
+					ps = c.prepareStatement(sql);
+					ps.setString(1, additionalReq);
+					ps.setInt(2, cid);
+					ps.setInt(3, iID);
+					
+					if(1 == ps.executeUpdate()){
+						result = true;
+					}else{
+						result = false;
+					}
+					
+				}else{
+					System.out.println("Error : More than one course with this course"); // isActive olana kadar problem yaratir
+				}
+			}
+			
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }
