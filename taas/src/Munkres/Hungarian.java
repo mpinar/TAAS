@@ -1,6 +1,7 @@
 package Munkres;
 
 import static java.lang.Math.*;
+
 import java.util.*;
 
 public class Hungarian {
@@ -651,6 +652,20 @@ public class Hungarian {
 		return minval;
 	}
 
+	public static double[][] generateRandomMatrix(int row, int col){
+		
+		double[][] rest = new double[row][col];
+		Random rand = new Random();
+		for(int i =0; i<row; i++){
+			for(int k =0; k<col; k++){
+				
+				rest[i][k] = (double) rand.nextInt(100); 
+			}
+		}
+		
+		return rest;
+	}
+	
 	public static void main(String[] args) 
 	{
 
@@ -670,7 +685,8 @@ public class Hungarian {
 			};*/
 
 		//Another example matrix
-		double[][] array = 
+		
+		/*double[][] array = 
 			{
 				{5, 86, 91, 0, 82},
 				{54, 65, 48, 88, 92},
@@ -678,7 +694,14 @@ public class Hungarian {
 				{13, 70, 82, 82, 11}
 			};
 
-
+*/
+		Scanner s = new Scanner(System.in);
+		System.out.print("Row : ");
+		int row = s.nextInt();
+		System.out.print("\nColumn : ");
+		int col = s.nextInt();
+		double[][] array = generateRandomMatrix(row, col);
+		
 		if (array.length > array[0].length){ //Rectangular matrix
 			array = transpose(array);
 		}
