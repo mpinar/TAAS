@@ -713,4 +713,64 @@ public class DatabaseHelper {
 		}
 
 	}
+
+	public int getInstructorIDfromMail(String mail) {
+		// TODO Auto-generated method stub
+		Connection c; 
+		int id = 0 ;
+		try{
+			c = connectToDatabase();
+			String sql = "Select id from Instructor where mail = ?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			
+			ps.setString(1, mail);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				id = rs.getInt("id");
+			}
+			c.close();
+			
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		
+
+		return id;
+	}
+
+	public ArrayList<Course> getTeachingInformationFromInsID(int instrID) {
+		// TODO Auto-generated method stub
+		
+		Connection c; 
+		ArrayList<Course> result = new ArrayList<Course>();
+		try{
+			c = connectToDatabase();
+			String sql = "select * from teaches as t join course as c on t.course_ID = c.ID where instructor_id = ?";
+			
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, instrID);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+		
+				String code = rs.getString("department_code");
+				int number = rs.getInt("number");
+				int capacity =rs.getInt("capacity");
+				int maxasst = rs.getInt("maxassistantnumber");
+				
+				Course co = new Course(code,number,capacity,maxasst);
+				result.add(co);
+			}
+			
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		
+		return result;
+		
+	}
 }

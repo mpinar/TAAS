@@ -21,7 +21,7 @@ public class Instructor {
 		mail = m;
 		department = d;
 		teaches = new ArrayList<Course>(); 
-		
+		id = setIDFromDBUsingMail();
 		
 	}
 
@@ -120,11 +120,18 @@ public class Instructor {
 		
 	}
 	
-	public void setTeachingInformationFromDB(){
+	public ArrayList<Course> getTeachingInformationFromDB(){
 		// TODO
+		return dbh.getTeachingInformationFromInsID(this.id);
 	}
 	
 	public void addTeachingInfoToDB(){
 		dbh.addTeachingInformationForInstructor(this);
+	}
+	
+	private int setIDFromDBUsingMail(){
+		int id = dbh.getInstructorIDfromMail(this.mail);
+		return id;
+		
 	}
 }
