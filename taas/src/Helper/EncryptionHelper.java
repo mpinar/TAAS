@@ -755,4 +755,12 @@ public class EncryptionHelper {
 		return hashed;
 
 		}
+	
+//	
+//	public static void main(String args[]){
+//		
+//		String t = "test";
+//		System.out.println(generatePass(t));
+//		
+//	}
 }
