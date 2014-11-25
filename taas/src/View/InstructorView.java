@@ -43,8 +43,11 @@ public class InstructorView extends JFrame {
 	JLabel lblMaxAsst;
 	JComboBox departmentBox;
 	JComboBox assistantBox, cbTeaching;
+	JButton btnRequest;
 	private JLabel lblRequest;
-
+	private ArrayList<String> assistants;
+	// private ArrayList<Assistant> string handle kolaysa buna gerek yok 
+	
 	/**
 	 * Create the frame.
 	 */
@@ -54,7 +57,7 @@ public class InstructorView extends JFrame {
 		instructor = inst;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 685, 445);
+		setBounds(100, 100, 688, 298);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -93,7 +96,7 @@ public class InstructorView extends JFrame {
 		contentPane.add(cbTeaching);
 
 		JLabel lblAdditionalRequest = new JLabel("Additional Request :");
-		lblAdditionalRequest.setBounds(28, 377, 460, 16);
+		lblAdditionalRequest.setBounds(28, 200, 164, 16);
 		contentPane.add(lblAdditionalRequest);
 
 		tfAdditionalRequest = new JTextField();
@@ -107,7 +110,7 @@ public class InstructorView extends JFrame {
 				}
 			}
 		});
-		tfAdditionalRequest.setBounds(172, 371, 316, 28);
+		tfAdditionalRequest.setBounds(204, 194, 316, 28);
 		contentPane.add(tfAdditionalRequest);
 		tfAdditionalRequest.setColumns(10);
 
@@ -135,7 +138,7 @@ public class InstructorView extends JFrame {
 				}
 			}
 		});
-		btnSaveAdditionalRequest.setBounds(533, 372, 117, 29);
+		btnSaveAdditionalRequest.setBounds(562, 195, 117, 29);
 		btnSaveAdditionalRequest.setToolTipText("Saves addtional request.");
 		contentPane.add(btnSaveAdditionalRequest);
 
@@ -161,6 +164,11 @@ public class InstructorView extends JFrame {
 		lblRequest.setBounds(39, 95, 123, 43);
 		contentPane.add(lblRequest);
 
+		btnRequest = new JButton("Request");
+		btnRequest.setBounds(409, 148, 117, 29);
+		btnRequest.setVisible(false);
+		contentPane.add(btnRequest);
+
 
 
 
@@ -183,7 +191,7 @@ public class InstructorView extends JFrame {
 						selectedCourse = c;
 
 						lblMaxAsst.setText("Max assistant : " + c.maxAssistantNumber);
-						//createRequestPanel(c.maxAssistantNumber); // selected dersin max asst sayisi
+
 						ArrayList<Department> deps = dbh.getAllDepartments();
 						String[] array = new String[deps.size()+1];
 						for (int i=1; i<=deps.size(); i++) {
@@ -200,41 +208,29 @@ public class InstructorView extends JFrame {
 				}else if(event.getSource() == departmentBox ){
 
 					if(!selected.isEmpty() && event.getStateChange() == ItemEvent.SELECTED){
+
+						// TODO get assistants of selected department
+						// display second list and 'request' button
 						
-						System.out.println("Selected dept is -->" + selected);
+						Department dept = new Department(selected);
+						assistants = dept.getAssistantsForThisDepartment();
+						
+						DefaultComboBoxModel model = new DefaultComboBoxModel((String[]) assistants.toArray(new String[assistants.size()]));
+						assistantBox.setModel(model);
+						assistantBox.setVisible(true);
+						contentPane.invalidate();
+						contentPane.repaint();
 
 					}
 
-				}
+				}else if(event.getSource() == assistantBox ){
 
+					if(!selected.isEmpty() && event.getStateChange() == ItemEvent.SELECTED){
+						btnRequest.setVisible(true);
+					}
+
+				}
 			}
 		}       
 	}
-
-
-	/*
-	private void createRequestPanel(int max){
-
-
-
-		for (int i=0; i<max; i++){
-			int y = 50 + 35*i;
-
-			JComboBox 
-			panel.add(departmentBox);
-
-			JComboBox 
-			panel.add(assistantBox);
-
-			JButton btnAdd = new JButton("Add");
-			btnAdd.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				}
-			});
-			btnAdd.setBounds(476, y, 117, 30);
-			panel.add(btnAdd);
-		}
-	}
-
-	 */
 }

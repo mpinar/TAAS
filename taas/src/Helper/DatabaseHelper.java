@@ -819,4 +819,34 @@ public class DatabaseHelper {
 		
 		return result;
 	}
+
+	public ArrayList<String> getAssistantsForDepartment(Department department) {
+		// TODO Auto-generated method stub
+		
+		Connection c;
+		ArrayList<String> result = new ArrayList<String>();
+		try{
+			c= connectToDatabase();
+			String sql = "select * from assistant where isActive=? and department_code=?";
+			PreparedStatement ps = c.prepareStatement(sql);
+					
+			ps.setInt(1, 1);
+			ps.setString(2, department.code);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				
+				String name = rs.getString("name");
+				String surname = rs.getString("surname");
+				result.add(name + " " + surname);
+			}
+			
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		
+		
+		return result;
+	}
 }

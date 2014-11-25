@@ -12,7 +12,7 @@ public String name;
 	public String code;
 	public String faculty;
 	
-	DatabaseHelper dbh;
+	public DatabaseHelper dbh;
 	
 	public Department(String n, String c, String f){
 		
@@ -39,6 +39,10 @@ public String name;
 	public String toString(){
 		String s = "[" + code+" - "+name+"]";
 		return s;
+	}
+	
+	public ArrayList<String> getAssistantsForThisDepartment(){
+		return dbh.getAssistantsForDepartment(this);
 	}
 }
 
