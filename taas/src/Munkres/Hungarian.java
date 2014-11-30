@@ -737,6 +737,7 @@ public class Hungarian {
 			sum = sum + array[assignment[i][0]][assignment[i][1]];
 			//</COMMENT>
 		}
+		
 
 		System.out.printf("\nThe %s is: %.1f\n", sumType, sum);
 
