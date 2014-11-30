@@ -140,4 +140,10 @@ public class Instructor {
 		return dbh.saveAdditionalRequestForCourse(c, this.id, additionalReq);
 		
 	}
+
+	public boolean makeAssistantRequest(Course selectedCourse, Assistant selectedAssistant) {
+		// TODO Auto-generated method stub
+		return dbh.insertAssistantRequest(this, selectedCourse, selectedAssistant);
+		
+	}
 }

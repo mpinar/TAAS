@@ -558,7 +558,7 @@ public class DatabaseHelper {
 		return id;
 
 	}
-	
+
 	public void addTeachingInformationForInstructor(Instructor instructor) {
 		// TODO Auto-generated method stub
 		Connection c; 
@@ -678,9 +678,9 @@ public class DatabaseHelper {
 			String sql = "Select id from assistant where mail = ?";
 			PreparedStatement ps = c.prepareStatement(sql);
 			ps.setString(1, assistant.mail);
-			
+
 			ResultSet rs = ps.executeQuery();
-			
+
 			while(rs.next()){
 				id = rs.getInt("id");
 			}
@@ -724,64 +724,64 @@ public class DatabaseHelper {
 			c = connectToDatabase();
 			String sql = "Select id from Instructor where mail = ?";
 			PreparedStatement ps = c.prepareStatement(sql);
-			
+
 			ps.setString(1, mail);
-			
+
 			ResultSet rs = ps.executeQuery();
-			
+
 			while(rs.next()){
 				id = rs.getInt("id");
 			}
 			c.close();
-			
+
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
-		
+
 
 		return id;
 	}
 
 	public ArrayList<Course> getTeachingInformationFromInsID(int instrID) {
 		// TODO Auto-generated method stub
-		
+
 		Connection c; 
 		ArrayList<Course> result = new ArrayList<Course>();
 		try{
 			c = connectToDatabase();
 			String sql = "select * from teaches as t join course as c on t.course_ID = c.ID where instructor_id = ?";
-			
+
 			PreparedStatement ps = c.prepareStatement(sql);
 			ps.setInt(1, instrID);
-			
+
 			ResultSet rs = ps.executeQuery();
-			
+
 			while(rs.next()){
-		
+
 				String code = rs.getString("department_code");
 				int number = rs.getInt("number");
 				int capacity =rs.getInt("capacity");
 				int maxasst = rs.getInt("maxassistantnumber");
-				
+
 				Course co = new Course(code,number,capacity,maxasst);
 				result.add(co);
 			}
-			
+
 			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
-		
+
 		return result;
-		
+
 	}
 
 	public boolean saveAdditionalRequestForCourse(Course course,int iID, String additionalReq) {
 
 		// TODO isActive olayi
-		
+
 		Connection c; 
-		
+
 		boolean result = false;
 		try{
 			c = connectToDatabase();
@@ -789,9 +789,9 @@ public class DatabaseHelper {
 			PreparedStatement ps = c.prepareStatement(sql);
 			ps.setString(1, course.code);
 			ps.setInt(2, course.number);
-			
+
 			ResultSet rs = ps.executeQuery();
-			
+
 			while(rs.next()){
 				if(rs.getInt("count")==1){
 					int cid = rs.getInt("id");
@@ -800,53 +800,143 @@ public class DatabaseHelper {
 					ps.setString(1, additionalReq);
 					ps.setInt(2, cid);
 					ps.setInt(3, iID);
-					
+
 					if(1 == ps.executeUpdate()){
 						result = true;
 					}else{
 						result = false;
 					}
-					
+
 				}else{
 					System.out.println("Error : More than one course with this course"); // isActive olana kadar problem yaratir
 				}
 			}
-			
+
 			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
-	public ArrayList<String> getAssistantsForDepartment(Department department) {
+	public ArrayList<Assistant> getAssistantsForDepartment(Department department) {
 		// TODO Auto-generated method stub
-		
+
 		Connection c;
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<Assistant> result = new ArrayList<Assistant>();
 		try{
 			c= connectToDatabase();
 			String sql = "select * from assistant where isActive=? and department_code=?";
 			PreparedStatement ps = c.prepareStatement(sql);
-					
+
 			ps.setInt(1, 1);
 			ps.setString(2, department.code);
 			ResultSet rs = ps.executeQuery();
-			
+
 			while(rs.next()){
-				
+
 				String name = rs.getString("name");
 				String surname = rs.getString("surname");
-				result.add(name + " " + surname);
+				String mail = rs.getString("mail");
+				Department d = new Department(rs.getString("department_code"));
+				Assistant a = new Assistant(name, surname, mail, d);
+				result.add(a);
 			}
-			
+
 			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
+
+
+		return result;
+	}
+
+	public boolean insertAssistantRequest(Instructor instructor,
+			Course selectedCourse, Assistant selectedAssistant) {
+		// TODO Auto-generated method stub
+		boolean result = false;
+		Connection c;
+
+		try{
+			c = connectToDatabase();
+
+			String sql = "Insert into Request (instructor_id,course_id,assistant_id) values(?,?,?)";
+
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, instructor.id);
+			ps.setInt(2, selectedCourse.id);
+			ps.setInt(3, selectedAssistant.id);
+
+			if(1 ==ps.executeUpdate()){
+				result =true;
+			}
+
+
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+
+	public int getCourseID(Course co){
+
+		int result =0;
+		Connection c;
+
+		try{
+			c = connectToDatabase();
+
+			String sql = "Select id, count(id) as count from course where department_code = ? and number =? and year =? and semester =?"; //TODO isActiv
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, co.code);
+			ps.setInt(2, co.number);
+			ps.setInt(3,year);
+			ps.setString(4, semester);
+
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()){
+
+				if(rs.getInt("count") != 1){
+					result = 0;
+
+				}else{
+					result = rs.getInt("id");
+				}
+			}
+
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	
+	public int getRequestCountForCourse(Course course) {
+		// TODO Auto-generated method stub
+		Connection c;
+		int result = 0;
+		try{
+		c = connectToDatabase();
+		String sql = "Select requestedAsstNumber from Course where id=?";
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, course.id);
 		
+		ResultSet rs = ps.executeQuery();
 		
+		while(rs.next()){
+			result = rs.getInt("requestedAsstNumber");
+		}
+			
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
 		return result;
 	}
 }

@@ -41,7 +41,7 @@ public String name;
 		return s;
 	}
 	
-	public ArrayList<String> getAssistantsForThisDepartment(){
+	public ArrayList<Assistant> getAssistantsForThisDepartment(){
 		return dbh.getAssistantsForDepartment(this);
 	}
 }

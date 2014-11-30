@@ -30,7 +30,7 @@ public class Assistant {
 		dbh = new DatabaseHelper();
 		background = new ArrayList<String>();
 		teachingBackground = new ArrayList<String>();
-
+		setAssistantID();
 	}
 	
 	
@@ -72,5 +72,9 @@ public class Assistant {
 	public void addAsstToDB() {
 		// TODO Auto-generated method stub
 		dbh.addAssistantToDB(this);
+	}
+	
+	public String toString(){
+		return this.name + " "+this.surname + " ["+ this.mail + "]"; 
 	}
 }

@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Helper.DatabaseHelper;
+import Model.Assistant;
 import Model.Course;
 import Model.Department;
 import Model.Instructor;
@@ -45,9 +46,12 @@ public class InstructorView extends JFrame {
 	JComboBox assistantBox, cbTeaching;
 	JButton btnRequest;
 	private JLabel lblRequest;
-	private ArrayList<String> assistants;
-	// private ArrayList<Assistant> string handle kolaysa buna gerek yok 
-	
+	private ArrayList<Assistant> assistants;
+	// private ArrayList<Assistant> string handle kolaysa buna gerek yok
+	private int maxAsstForCourse=0;
+	private Assistant selectedAssistant;
+	private Department selectedDepartment;
+
 	/**
 	 * Create the frame.
 	 */
@@ -165,6 +169,28 @@ public class InstructorView extends JFrame {
 		contentPane.add(lblRequest);
 
 		btnRequest = new JButton("Request");
+		btnRequest.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				boolean req = instructor.makeAssistantRequest(selectedCourse,selectedAssistant);
+
+				if(req){
+					JOptionPane.showMessageDialog(getParent(), "Your request is saved","Success",JOptionPane.INFORMATION_MESSAGE);
+					// a request has been made and update the max assistant count. this may be done with a trigger.
+					//maxAsstForCourse--;
+					selectedCourse.updateMaxAssistantCount();
+					lblMaxAsst.setText("Max assistant : " + selectedCourse.maxAssistantNumber);
+					contentPane.invalidate();
+					contentPane.repaint();
+
+				}else{
+					JOptionPane.showMessageDialog(getParent(),
+							"An error ocurred while saving your request. Try again.",
+							"Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		btnRequest.setBounds(409, 148, 117, 29);
 		btnRequest.setVisible(false);
 		contentPane.add(btnRequest);
@@ -173,6 +199,8 @@ public class InstructorView extends JFrame {
 
 
 	}
+
+
 
 	class ItemChangeListener implements ItemListener{
 		@Override
@@ -188,22 +216,32 @@ public class InstructorView extends JFrame {
 
 						String[] arr = selected.split(" ");
 						Course c = new Course(arr[0], Integer.parseInt(arr[1]));
+						c.setID();
 						selectedCourse = c;
+						lblMaxAsst.setText("Max assistant : " + selectedCourse.maxAssistantNumber);
 
-						lblMaxAsst.setText("Max assistant : " + c.maxAssistantNumber);
+						if(selectedCourse.maxAssistantNumber != 0){
+							ArrayList<Department> deps = dbh.getAllDepartments();
+							String[] array = new String[deps.size()+1];
+							for (int i=1; i<=deps.size(); i++) {
+								Department d = deps.get(i-1);
+								array[i] = d.code;
+							}
 
-						ArrayList<Department> deps = dbh.getAllDepartments();
-						String[] array = new String[deps.size()+1];
-						for (int i=1; i<=deps.size(); i++) {
-							Department d = deps.get(i-1);
-							array[i] = d.code;
+							array[0] = "Select Department";
+							DefaultComboBoxModel model = new DefaultComboBoxModel(array);
+							departmentBox.setModel(model);
+							departmentBox.addItemListener(new ItemChangeListener());
+							departmentBox.setVisible(true);
+							contentPane.invalidate();
+							contentPane.repaint();
+						}else{
+							JLabel lblError = new JLabel("You have reached your maximum number of requests");
+							lblError.setBounds(11, 150, 400, 25);
+							contentPane.add(lblError);
+							contentPane.invalidate();
+							contentPane.repaint();
 						}
-						DefaultComboBoxModel model = new DefaultComboBoxModel(array);
-						departmentBox.setModel(model);
-						departmentBox.addItemListener(new ItemChangeListener());
-						departmentBox.setVisible(true);
-						contentPane.invalidate();
-						contentPane.repaint();
 					}
 				}else if(event.getSource() == departmentBox ){
 
@@ -211,13 +249,26 @@ public class InstructorView extends JFrame {
 
 						// TODO get assistants of selected department
 						// display second list and 'request' button
-						
+
 						Department dept = new Department(selected);
+						selectedDepartment = dept;
 						assistants = dept.getAssistantsForThisDepartment();
-						
-						DefaultComboBoxModel model = new DefaultComboBoxModel((String[]) assistants.toArray(new String[assistants.size()]));
+
+						//(String[]) assistants.toArray(new String[assistants.size()])
+						String[] array = new String[assistants.size()+1];
+						array[0] = "Select Assistant";
+						for (int i=1; i<=assistants.size(); i++) {
+							Assistant a = assistants.get(i-1);
+							array[i] = a.toString();
+						}
+
+
+						DefaultComboBoxModel model = new DefaultComboBoxModel(array);
 						assistantBox.setModel(model);
+						assistantBox.addItemListener(new ItemChangeListener());
 						assistantBox.setVisible(true);
+						btnRequest.setVisible(true);
+
 						contentPane.invalidate();
 						contentPane.repaint();
 
@@ -226,7 +277,14 @@ public class InstructorView extends JFrame {
 				}else if(event.getSource() == assistantBox ){
 
 					if(!selected.isEmpty() && event.getStateChange() == ItemEvent.SELECTED){
-						btnRequest.setVisible(true);
+
+						String[] ns = selected.split(" ");
+						String name = ns[0];
+						String surname = ns[1];
+						String mail = ns[2].substring(1, ns[2].length()-1);
+						System.out.println(name + " "+ surname + " " + mail);
+						Assistant a = new Assistant(name,surname,mail,selectedDepartment);
+						selectedAssistant = a;
 					}
 
 				}
