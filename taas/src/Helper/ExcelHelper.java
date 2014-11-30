@@ -72,6 +72,7 @@ public class ExcelHelper {
 				if(!code.isEmpty()){
 					Course course = new Course(code, number, capacity);
 					course.addCourseToDatabase();
+					
 				}
 
 			}

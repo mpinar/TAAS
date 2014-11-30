@@ -21,13 +21,13 @@ public class Course {
 		setMaxAssistantNumber(capacity);
 		updateMaxAssistantCount();
 	}
+	
+	// use this only adding course to db
 	public Course(String c, int n, int capacity) { 
 		code = c;
 		number = n;
 		this.capacity = capacity;
-		setID();
 		setMaxAssistantNumber(capacity);
-		updateMaxAssistantCount();
 		dbh = new DatabaseHelper();
 	}
 
