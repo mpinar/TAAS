@@ -68,7 +68,7 @@ public class Course {
 	public void updateMaxAssistantCount() {
 		// TODO get max asst count subtract request number
 		
-		int max = this.maxAssistantNumber;
+		int max = dbh.getMaxAssistantCountForCourse(this);
 		int reqCount = dbh.getRequestCountForCourse(this);
 		this.maxAssistantNumber = max - reqCount;
 		

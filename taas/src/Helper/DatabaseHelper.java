@@ -939,4 +939,28 @@ public class DatabaseHelper {
 		}
 		return result;
 	}
+
+	public int getMaxAssistantCountForCourse(Course course) {
+		
+
+		Connection c;
+		int result = 0;
+		try{
+		c = connectToDatabase();
+		String sql = "Select maxAssistantNumber from Course where id=?";
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, course.id);
+		
+		ResultSet rs = ps.executeQuery();
+		
+		while(rs.next()){
+			result = rs.getInt("maxAssistantNumber");
+		}
+			
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 }
