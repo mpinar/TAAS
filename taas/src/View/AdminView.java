@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import Helper.DatabaseHelper;
 import Helper.ExcelHelper;
 import Helper.TimeStorage;
+import Munkres.Cost;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -32,6 +33,7 @@ public class AdminView extends JFrame {
 	private DatabaseHelper dbh;
 	String fileName = null;
 	private ExcelHelper eh;
+	private Cost cost;
 	//private JTextField newPass;
 	/**
 	 * Launch the application.
@@ -128,6 +130,26 @@ public class AdminView extends JFrame {
 		});
 		btnSelectFile.setBounds(250, 68, 117, 29);
 		contentPane.add(btnSelectFile);
+		
+		JButton btnCalculateCost = new JButton("Calculate Cost");
+		btnCalculateCost.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cost = new Cost(eh.allAssistants, eh.allCourses);
+				cost.calculateCost();
+				
+				
+			}
+		});
+		btnCalculateCost.setBounds(401, 68, 117, 29);
+		contentPane.add(btnCalculateCost);
+		
+		JButton btnMunkres = new JButton("MUNKRES");
+		btnMunkres.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnMunkres.setBounds(323, 106, 117, 29);
+		contentPane.add(btnMunkres);
 
 
 	}

@@ -30,6 +30,10 @@ public class ExcelHelper {
 	public int year;
 	public String semester;
 
+	
+	public ArrayList<Assistant> allAssistants = new ArrayList<Assistant>();
+	public ArrayList<Course> allCourses = new ArrayList<Course>();
+	
 	public ExcelHelper(String file){
 		try {
 			FileInputStream excelFile = new FileInputStream(chosenFile);
@@ -72,7 +76,7 @@ public class ExcelHelper {
 				if(!code.isEmpty()){
 					Course course = new Course(code, number, capacity);
 					course.addCourseToDatabase();
-					
+					allCourses.add(course);
 				}
 
 			}
@@ -180,6 +184,9 @@ public class ExcelHelper {
 				asst.isActive = true;
 				asst.addAsstToDB();
 				asst.setAdvisorFromMail(advMail);
+				
+				allAssistants.add(asst);
+				
 			}
 		}
 
