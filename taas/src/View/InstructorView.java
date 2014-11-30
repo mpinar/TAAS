@@ -180,6 +180,13 @@ public class InstructorView extends JFrame {
 					//maxAsstForCourse--;
 					selectedCourse.updateMaxAssistantCount();
 					lblMaxAsst.setText("Max assistant : " + selectedCourse.maxAssistantNumber);
+
+					if(selectedCourse.maxAssistantNumber == 0){
+						JLabel lblError = new JLabel("You have reached your maximum number of requests");
+						lblError.setBounds(11, 150, 400, 25);
+						contentPane.add(lblError);
+						removeRequestElements();
+					}
 					contentPane.invalidate();
 					contentPane.repaint();
 
@@ -190,6 +197,8 @@ public class InstructorView extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
+
+			
 		});
 		btnRequest.setBounds(409, 148, 117, 29);
 		btnRequest.setVisible(false);
@@ -220,7 +229,7 @@ public class InstructorView extends JFrame {
 						selectedCourse = c;
 						lblMaxAsst.setText("Max assistant : " + selectedCourse.maxAssistantNumber);
 
-						if(selectedCourse.maxAssistantNumber != 0){
+						if(selectedCourse.maxAssistantNumber > 0){
 							ArrayList<Department> deps = dbh.getAllDepartments();
 							String[] array = new String[deps.size()+1];
 							for (int i=1; i<=deps.size(); i++) {
@@ -233,15 +242,17 @@ public class InstructorView extends JFrame {
 							departmentBox.setModel(model);
 							departmentBox.addItemListener(new ItemChangeListener());
 							departmentBox.setVisible(true);
-							contentPane.invalidate();
-							contentPane.repaint();
+						
 						}else{
-							JLabel lblError = new JLabel("You have reached your maximum number of requests");
-							lblError.setBounds(11, 150, 400, 25);
-							contentPane.add(lblError);
-							contentPane.invalidate();
-							contentPane.repaint();
+								JLabel lblError = new JLabel("You have reached your maximum number of requests");
+								lblError.setBounds(11, 150, 400, 25);
+								contentPane.add(lblError);
+								removeRequestElements();
+								
 						}
+						
+						contentPane.invalidate();
+						contentPane.repaint();
 					}
 				}else if(event.getSource() == departmentBox ){
 
@@ -290,5 +301,11 @@ public class InstructorView extends JFrame {
 				}
 			}
 		}       
+	}
+	
+	private void removeRequestElements() {
+		contentPane.remove(departmentBox);
+		contentPane.remove(assistantBox);
+		contentPane.remove(btnRequest);
 	}
 }
