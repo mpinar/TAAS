@@ -9,6 +9,7 @@ package Helper;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
@@ -917,23 +918,24 @@ public class DatabaseHelper {
 		return result;
 	}
 
-	
+
 	public int getRequestCountForCourse(Course course) {
 		// TODO Auto-generated method stub
 		Connection c;
 		int result = 0;
 		try{
-		c = connectToDatabase();
-		String sql = "Select requestedAsstNumber from Course where id=?";
-		PreparedStatement ps = c.prepareStatement(sql);
-		ps.setInt(1, course.id);
-		
-		ResultSet rs = ps.executeQuery();
-		
-		while(rs.next()){
-			result = rs.getInt("requestedAsstNumber");
-		}
-			
+			c = connectToDatabase();
+			String sql = "Select requestedAsstNumber from Course where id=?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, course.id);
+
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()){
+				result = rs.getInt("requestedAsstNumber");
+			}
+
+			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
@@ -941,26 +943,87 @@ public class DatabaseHelper {
 	}
 
 	public int getMaxAssistantCountForCourse(Course course) {
-		
+
 
 		Connection c;
 		int result = 0;
 		try{
-		c = connectToDatabase();
-		String sql = "Select maxAssistantNumber from Course where id=?";
-		PreparedStatement ps = c.prepareStatement(sql);
-		ps.setInt(1, course.id);
-		
-		ResultSet rs = ps.executeQuery();
-		
-		while(rs.next()){
-			result = rs.getInt("maxAssistantNumber");
-		}
-			
+			c = connectToDatabase();
+			String sql = "Select maxAssistantNumber from Course where id=?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, course.id);
+
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()){
+				result = rs.getInt("maxAssistantNumber");
+			}
+
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
+
+	public Instructor getInstructorFromCourseID(Course course){
+
+		Connection c;
+		Instructor i= null;
+		try{
+			c = connectToDatabase();
+			String sql = "select * from teaches t join instructor i on i.id = t.`Instructor_ID` where Course_ID = ?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, course.id);
+
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()){
+				String n = rs.getString("name");
+				String s = rs.getString("surname");
+				String mail = rs.getString("mail");
+				Department d = getDepartmentInformation(rs.getString("department_code"));
+				i = new Instructor(n, s, mail, d);
+			}
+
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		return i;
+
+	}
+
+	public ArrayList<String> getBackgroundRequestFromCourse(Course course){
+
+		Connection c;
+		ArrayList<String> requests = new ArrayList<>();
+		try{
+			c = connectToDatabase();
+			String sql = "select backgroundRequest from teaches where Course_ID = ?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, course.id);
+
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()){
+				String request = rs.getString("backgroundRequest");
+
+				StringTokenizer st = new StringTokenizer(request, ", ");
+
+				if(st.countTokens() != 0){
+					for (int i = 0; i < st.countTokens(); i++) {
+						requests.add(st.nextToken());
+					}
+				}
+			}
+
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return requests;
+
+	}
+
 }
