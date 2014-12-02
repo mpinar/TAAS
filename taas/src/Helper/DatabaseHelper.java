@@ -398,7 +398,7 @@ public class DatabaseHelper {
 		Connection c;
 		try{
 			c = connectToDatabase();
-			String sql= "select * from assistant a join person p on p.ID = a.person_ID"; // 
+			String sql= "select * from assistant"; // 
 			PreparedStatement ps = c.prepareStatement(sql);
 
 			ResultSet rs = ps.executeQuery();
@@ -443,6 +443,37 @@ public class DatabaseHelper {
 				Department d = getDepartmentInformation(rs.getString("department_code"));
 
 				Instructor i = new Instructor(n, s, m, d);
+				result.add(i);
+			}
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+	
+	public ArrayList<Course> getAllCourses(){
+		
+		Connection c; 
+		ArrayList<Course> result = new ArrayList<Course>();
+
+		try{
+
+			c = connectToDatabase();
+			String sql = "Select * from Instructor";
+			PreparedStatement ps = c.prepareStatement(sql);
+
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()){
+
+				int n = rs.getInt("number");
+				int capacity = rs.getInt("capacity");
+				int maxAsst = rs.getInt("maxAssistantNumber");
+				String code = rs.getString("Department_code");
+
+				Course i = new Course(code, n, capacity, maxAsst);
 				result.add(i);
 			}
 			c.close();

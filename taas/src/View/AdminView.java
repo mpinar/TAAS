@@ -134,7 +134,7 @@ public class AdminView extends JFrame {
 		JButton btnCalculateCost = new JButton("Calculate Cost");
 		btnCalculateCost.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cost = new Cost(eh.allAssistants, eh.allCourses);
+				cost = new Cost(dbh.getAllAssistants(), dbh.getAllCourses());
 				cost.calculateCost();
 				
 				
