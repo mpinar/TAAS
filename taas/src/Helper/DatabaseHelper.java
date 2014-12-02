@@ -411,6 +411,8 @@ public class DatabaseHelper {
 				Department d = getDepartmentInformation(dept);
 
 				Assistant asst = new Assistant(name,surname,mail,d);
+				asst.background = getBackgroundofAssistant(asst);
+				asst.teachingBackground = getTeachingBackgroundofAssistant(asst);
 				result.add(asst);
 			}
 
@@ -774,6 +776,7 @@ public class DatabaseHelper {
 
 		return id;
 	}
+	
 
 	public ArrayList<Course> getTeachingInformationFromInsID(int instrID) {
 		// TODO Auto-generated method stub
@@ -1056,6 +1059,78 @@ public class DatabaseHelper {
 
 		return requests;
 
+	}
+	
+	public ArrayList<String> getBackgroundofAssistant(Assistant assistant){
+		
+		Connection c;
+		ArrayList<String> requests = new ArrayList<>();
+		try{
+			c = connectToDatabase();
+			String sql = "select background from assistant where id = ?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, assistant.id);
+
+			ResultSet rs = ps.executeQuery();
+			
+			String background = null;
+
+			while(rs.next()){
+				background = rs.getString("background");
+
+				StringTokenizer st = new StringTokenizer(background, ",");
+
+				if(st.countTokens() != 0){
+					for (int i = 0; i < st.countTokens(); i++) {
+						requests.add(st.nextToken());
+					}
+				}
+			}
+			assistant.setRawBG(background);
+
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return requests;
+		
+	}
+	
+public ArrayList<String> getTeachingBackgroundofAssistant(Assistant assistant){
+		
+		Connection c;
+		ArrayList<String> requests = new ArrayList<>();
+		try{
+			c = connectToDatabase();
+			String sql = "select teachingBackground from assistant where id = ?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, assistant.id);
+
+			ResultSet rs = ps.executeQuery();
+			
+			String background = null;
+
+			while(rs.next()){
+				background = rs.getString("teachingBackground");
+
+				StringTokenizer st = new StringTokenizer(background, ",");
+
+				if(st.countTokens() != 0){
+					for (int i = 0; i < st.countTokens(); i++) {
+						requests.add(st.nextToken());
+					}
+				}
+			}
+			assistant.setRawTBG(background);
+
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return requests;
+		
 	}
 
 }

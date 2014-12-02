@@ -17,11 +17,11 @@ public class Assistant {
 	public ArrayList<String> background;
 	public ArrayList<String> teachingBackground;
 	private String rawBG, rawTBG;
-	
+
 	public boolean isActive;
 	DatabaseHelper dbh;
-	
-	
+
+
 	public Assistant(String n, String s, String m, Department d){
 		name = n;
 		surname = s;
@@ -32,8 +32,8 @@ public class Assistant {
 		teachingBackground = new ArrayList<String>();
 		setAssistantID();
 	}
-	
-	
+
+
 	public String getRawBG() {
 		return rawBG;
 	}
@@ -55,15 +55,16 @@ public class Assistant {
 
 
 	public void setAdvisorFromMail(String mail){
-	advisor = dbh.getInstructorFromMail(mail);
-	setAssistantID();
-	insertAdvisorInfoInDB();
+		this.advisor = dbh.getInstructorFromMail(mail);
+		setAssistantID();
+		insertAdvisorInfoInDB();
+		
 	}
-	
+
 	private void insertAdvisorInfoInDB(){
 		dbh.insertAdvisorInfoForAssistant(this);
 	}
-	
+
 	public void setAssistantID(){
 		id = dbh.getAssistantID(this);
 	}
@@ -73,7 +74,8 @@ public class Assistant {
 		// TODO Auto-generated method stub
 		dbh.addAssistantToDB(this);
 	}
-		
+
+
 	public String toString(){
 		return this.name + " "+this.surname + " ["+ this.mail + "]"; 
 	}

@@ -209,7 +209,7 @@ public class Cost {
 	public int checkTeachingBackground(Assistant assistant, Course course){
 		
 		int result = 0;
-		ArrayList<String> background = assistant.teachingBackground;
+		ArrayList<String> background = dbh.getTeachingBackgroundofAssistant(assistant);
 		
 		String fullCourseName = course.code + " " + course.number;
 		boolean isAssisted = false;
@@ -253,7 +253,7 @@ public class Cost {
 		
 		int result = 0;
 		
-		ArrayList<String> background = assistant.background;
+		ArrayList<String> background = dbh.getBackgroundofAssistant(assistant);
 		ArrayList<String> requests = dbh.getBackgroundRequestFromCourse(course);
 		
 		for (int i = 0; i < background.size(); i++) {
