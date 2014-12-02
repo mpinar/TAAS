@@ -10,7 +10,7 @@ public class Course {
 	public int capacity;
 	public int maxAssistantNumber;
 	public String instrReq;
-	DatabaseHelper dbh; 
+	DatabaseHelper dbh = new DatabaseHelper();
 
 	public Course(String code, int num){
 		this.code = code;

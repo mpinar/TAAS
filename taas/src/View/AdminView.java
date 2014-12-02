@@ -17,6 +17,7 @@ import Helper.DatabaseHelper;
 import Helper.ExcelHelper;
 import Helper.TimeStorage;
 import Munkres.Cost;
+import Munkres.Hungarian;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -135,8 +136,8 @@ public class AdminView extends JFrame {
 		btnCalculateCost.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cost = new Cost(dbh.getAllAssistants(), dbh.getAllCourses());
-				cost.calculateCost();
-				
+				double[][] cm = cost.calculateCost();
+				Hungarian hung = new Hungarian(cm);
 				
 			}
 		});

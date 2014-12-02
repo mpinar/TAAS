@@ -454,9 +454,9 @@ public class DatabaseHelper {
 
 		return result;
 	}
-	
+
 	public ArrayList<Course> getAllCourses(){
-		
+
 		Connection c; 
 		ArrayList<Course> result = new ArrayList<Course>();
 
@@ -474,7 +474,7 @@ public class DatabaseHelper {
 				int n = rs.getInt("number");
 				int capacity = rs.getInt("capacity");
 				int maxAsst = rs.getInt("maxAssistantNumber");
-				
+
 
 				Course i = new Course(code, n, capacity, maxAsst);
 				result.add(i);
@@ -776,7 +776,7 @@ public class DatabaseHelper {
 
 		return id;
 	}
-	
+
 
 	public ArrayList<Course> getTeachingInformationFromInsID(int instrID) {
 		// TODO Auto-generated method stub
@@ -1043,12 +1043,20 @@ public class DatabaseHelper {
 			while(rs.next()){
 				String request = rs.getString("backgroundRequest");
 
-				StringTokenizer st = new StringTokenizer(request, ", ");
-
-				if(st.countTokens() != 0){
-					for (int i = 0; i <= st.countTokens(); i++) {
-						requests.add(st.nextToken());
+				//				StringTokenizer st = new StringTokenizer(request, ", ");
+				//
+				//				if(st.countTokens() != 0){
+				//					for (int i = 0; i <= st.countTokens(); i++) {
+				//						requests.add(st.nextToken());
+				//					}
+				//				}
+				if(request != null){
+					String[] backArr =request.split(", ");
+					for (int i = 0; i < backArr.length; i++) {
+						requests.add(backArr[i]);
 					}
+				}else{
+					requests = null;
 				}
 			}
 
@@ -1060,9 +1068,9 @@ public class DatabaseHelper {
 		return requests;
 
 	}
-	
+
 	public ArrayList<String> getBackgroundofAssistant(Assistant assistant){
-		
+
 		Connection c;
 		ArrayList<String> requests = new ArrayList<>();
 		try{
@@ -1072,19 +1080,26 @@ public class DatabaseHelper {
 			ps.setInt(1, assistant.id);
 
 			ResultSet rs = ps.executeQuery();
-			
+
 			String background = null;
 
 			while(rs.next()){
 				background = rs.getString("background");
 
-				StringTokenizer st = new StringTokenizer(background, ",");
+				//				StringTokenizer st = new StringTokenizer(background, ",");
+				//
+				//				if(st.countTokens() != 0){
+				//					for (int i = 0; i <= st.countTokens(); i++) {
+				//						requests.add(st.nextToken());
+				//					}
+				//				}
 
-				if(st.countTokens() != 0){
-					for (int i = 0; i <= st.countTokens(); i++) {
-						requests.add(st.nextToken());
-					}
+				String[] backArr =background.split(",");
+				for (int i = 0; i < backArr.length; i++) {
+					requests.add(backArr[i]);
 				}
+
+
 			}
 			assistant.setRawBG(background);
 
@@ -1094,11 +1109,11 @@ public class DatabaseHelper {
 		}
 
 		return requests;
-		
+
 	}
-	
-public ArrayList<String> getTeachingBackgroundofAssistant(Assistant assistant){
-		
+
+	public ArrayList<String> getTeachingBackgroundofAssistant(Assistant assistant){
+
 		Connection c;
 		ArrayList<String> requests = new ArrayList<>();
 		try{
@@ -1108,18 +1123,23 @@ public ArrayList<String> getTeachingBackgroundofAssistant(Assistant assistant){
 			ps.setInt(1, assistant.id);
 
 			ResultSet rs = ps.executeQuery();
-			
+
 			String background = null;
 
 			while(rs.next()){
 				background = rs.getString("teachingBackground");
 
-				StringTokenizer st = new StringTokenizer(background, ",");
+				//				StringTokenizer st = new StringTokenizer(background, ",");
+				//
+				//				if(st.countTokens() != 0){
+				//					for (int i = 0; i < st.countTokens(); i++) {
+				//						requests.add(st.nextToken());
+				//					}
+				//				}
 
-				if(st.countTokens() != 0){
-					for (int i = 0; i < st.countTokens(); i++) {
-						requests.add(st.nextToken());
-					}
+				String[] backArr =background.split(",");
+				for (int i = 0; i < backArr.length; i++) {
+					requests.add(backArr[i]);
 				}
 			}
 			assistant.setRawTBG(background);
@@ -1130,7 +1150,7 @@ public ArrayList<String> getTeachingBackgroundofAssistant(Assistant assistant){
 		}
 
 		return requests;
-		
+
 	}
 
 }

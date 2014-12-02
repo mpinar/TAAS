@@ -8,44 +8,52 @@ import Model.Course;
 import Model.Instructor;
 
 public class Cost {
-	
+
 	public DatabaseHelper dbh = new DatabaseHelper();
 
 	ArrayList<Assistant> allAssistants;
 	ArrayList<Course> allCourses; 
-
-	double[][] costMatrix = new double[9999][9999];
+	int asstSize= 0,coursesSize = 0;
+	double[][] costMatrix;
 
 	public Cost(ArrayList<Assistant> allAssistants, ArrayList<Course> allCourses) {
 
 		this.allAssistants = allAssistants;
 		this.allCourses = allCourses;
+		asstSize = allAssistants.size();
+		coursesSize = allCourses.size();
+		costMatrix = new double[asstSize][coursesSize];
 	}
 
 
+
+
 	public double[][] calculateCost(){
-		
+
 		int asstCount = 0;
 		int courseCount = 0;
 		for (Assistant assistant : allAssistants) {
-			
+
 			for (Course course : allCourses) {
 
-				int cost = 0;
 				
-				cost += checkDepartment(assistant, course);
-				cost += checkTeachingBackground(assistant, course);
-				//cost += checkAdvisor(assistant, course); //TODO advisor olayini cozmek lazim
-				cost += checkAcademicBackground(assistant, course);
-				
-				
-				costMatrix[asstCount][courseCount] = cost;
-				courseCount++;
-			}
+					int cost = 0;
+
+					cost += checkDepartment(assistant, course);
+					cost += checkTeachingBackground(assistant, course);
+					//cost += checkAdvisor(assistant, course); //TODO advisor olayini cozmek lazim
+					cost += checkAcademicBackground(assistant, course);
+
+
+					costMatrix[asstCount][courseCount] = cost;
+					courseCount++;
+				}
+			
 			asstCount++;
+			courseCount = 0;
 		}
 
-		System.out.println(costMatrix);
+		printCostMatrix();
 		return costMatrix;
 	}
 
@@ -84,7 +92,7 @@ public class Cost {
 			break;
 
 		case "ELEC":
-			
+
 			switch (assistantDept) {
 			case "COMP":
 				result = 3;
@@ -113,7 +121,7 @@ public class Cost {
 			break;
 
 		case "INDR":
-			
+
 			switch (assistantDept) {
 			case "COMP":
 				result = 2;
@@ -142,7 +150,7 @@ public class Cost {
 			break;
 
 		case "CHBI":
-			
+
 			switch (assistantDept) {
 			case "COMP":
 				result = 4;
@@ -171,7 +179,7 @@ public class Cost {
 			break;
 
 		case "MECH":
-			
+
 			switch (assistantDept) {
 			case "COMP":
 				result = 5;
@@ -206,12 +214,12 @@ public class Cost {
 		return result;
 
 	}
-	
+
 	public int checkTeachingBackground(Assistant assistant, Course course){
-		
+
 		int result = 0;
 		ArrayList<String> background = dbh.getTeachingBackgroundofAssistant(assistant);
-		
+
 		String fullCourseName = course.code + " " + course.number;
 		boolean isAssisted = false;
 		if(background.size()>0){
@@ -230,44 +238,55 @@ public class Cost {
 		}else{
 			result += 3;
 		}
-		
+
 		return result;
-		
+
 	}
 
 	public int checkAdvisor(Assistant assistant, Course course){
-		
+
 		int cost = 0;
 		String advMail = assistant.advisor.mail;
 		Instructor ins = dbh.getInstructorFromCourseID(course);
 		String insMail = ins.mail;
-		
+
 		if (advMail.equalsIgnoreCase(insMail)) {
 			cost = -2;
 		}
-		
+
 		return cost;
-		
+
 	}
 
 	public int checkAcademicBackground(Assistant assistant, Course course){
-		
+
 		int result = 0;
-		
+
 		ArrayList<String> background = dbh.getBackgroundofAssistant(assistant);
+		course.setID();
 		ArrayList<String> requests = dbh.getBackgroundRequestFromCourse(course);
-		
-		for (int i = 0; i < background.size(); i++) {
-			for (int j = 0; j < requests.size(); j++) {
-				
-				if (background.get(i).equalsIgnoreCase(requests.get(j))) {
-					result -= 2;	
-				}else{
-					result += 5;
+
+		if(requests != null){
+			for (int i = 0; i < background.size(); i++) {
+				for (int j = 0; j < requests.size(); j++) {
+
+					if (background.get(i).equalsIgnoreCase(requests.get(j))) {
+						result -= 2;	
+					}
 				}
 			}
 		}
-		
 		return result;
+	}
+
+	private void printCostMatrix(){
+		
+		for (int i = 0; i < costMatrix.length; i++) {
+			for (int j = 0; j < costMatrix[i].length; j++) {
+				System.out.print(costMatrix[i][j] + "  ");
+			}
+			System.out.println();
+			
+		}
 	}
 }

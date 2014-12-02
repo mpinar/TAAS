@@ -653,20 +653,20 @@ public class Hungarian {
 	}
 
 	public static double[][] generateRandomMatrix(int row, int col){
-		
+
 		double[][] rest = new double[row][col];
 		Random rand = new Random();
 		for(int i =0; i<row; i++){
 			for(int k =0; k<col; k++){
-				
+
 				rest[i][k] = (double) rand.nextInt(100); 
 			}
 		}
-		
+
 		return rest;
 	}
-	
-	public static void main(String[] args) 
+
+	public void deneme(double[][] cm) 
 	{
 
 		//If the intent is to find the assignment, that is, the combination of 
@@ -685,7 +685,7 @@ public class Hungarian {
 			};*/
 
 		//Another example matrix
-		
+
 		/*double[][] array = 
 			{
 				{5, 86, 91, 0, 82},
@@ -694,14 +694,14 @@ public class Hungarian {
 				{13, 70, 82, 82, 11}
 			};
 
-*/
-		Scanner s = new Scanner(System.in);
-		System.out.print("Row : ");
-		int row = s.nextInt();
-		System.out.print("\nColumn : ");
-		int col = s.nextInt();
-		double[][] array = generateRandomMatrix(row, col);
-		
+		 */
+//		Scanner s = new Scanner(System.in);
+//		System.out.print("Row : ");
+//		int row = s.nextInt();
+//		System.out.print("\nColumn : ");
+//		int col = s.nextInt();
+		double[][] array = cm;
+
 		if (array.length > array[0].length){ //Rectangular matrix
 			array = transpose(array);
 		}
@@ -737,7 +737,7 @@ public class Hungarian {
 			sum = sum + array[assignment[i][0]][assignment[i][1]];
 			//</COMMENT>
 		}
-		
+
 
 		System.out.printf("\nThe %s is: %.1f\n", sumType, sum);
 
@@ -748,4 +748,12 @@ public class Hungarian {
 		insertLines(1);
 
 	}
+
+	
+
+	public Hungarian(double[][] costMatrix){
+		
+deneme(costMatrix);
+	}
 }
+
