@@ -1046,7 +1046,7 @@ public class DatabaseHelper {
 				StringTokenizer st = new StringTokenizer(request, ", ");
 
 				if(st.countTokens() != 0){
-					for (int i = 0; i < st.countTokens(); i++) {
+					for (int i = 0; i <= st.countTokens(); i++) {
 						requests.add(st.nextToken());
 					}
 				}
@@ -1081,7 +1081,7 @@ public class DatabaseHelper {
 				StringTokenizer st = new StringTokenizer(background, ",");
 
 				if(st.countTokens() != 0){
-					for (int i = 0; i < st.countTokens(); i++) {
+					for (int i = 0; i <= st.countTokens(); i++) {
 						requests.add(st.nextToken());
 					}
 				}

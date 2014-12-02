@@ -45,6 +45,7 @@ public class Cost {
 			asstCount++;
 		}
 
+		System.out.println(costMatrix);
 		return costMatrix;
 	}
 
