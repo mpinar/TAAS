@@ -413,6 +413,7 @@ public class DatabaseHelper {
 				Assistant asst = new Assistant(name,surname,mail,d);
 				asst.background = getBackgroundofAssistant(asst);
 				asst.teachingBackground = getTeachingBackgroundofAssistant(asst);
+				asst.advisor = getAdvisorForAssistant(asst);
 				result.add(asst);
 			}
 
@@ -422,6 +423,37 @@ public class DatabaseHelper {
 		}
 
 		return result;
+	}
+
+	private Instructor getAdvisorForAssistant(Assistant asst) {
+		// TODO Auto-generated method stub
+		Connection c;
+		Instructor i = null;
+		try{
+			
+			c= connectToDatabase();
+			
+			String sql = "Select *,count(instructor.id) as count from instructor join advisor on instructor_id = instructor.id where assistant_id = ?";
+			
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, asst.id);		
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				if(rs.getInt("count") == 1){
+				String n = rs.getString("name");
+				String s = rs.getString("surname");
+				String m = rs.getString("mail");
+				Department d = getDepartmentInformation(rs.getString("department_code"));
+
+				i = new Instructor(n, s, m, d);
+				}
+			}
+		
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		return i;
 	}
 
 	public ArrayList<Instructor> getAllInstructors(){

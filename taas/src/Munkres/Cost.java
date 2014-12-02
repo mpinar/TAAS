@@ -41,7 +41,7 @@ public class Cost {
 
 					cost += checkDepartment(assistant, course);
 					cost += checkTeachingBackground(assistant, course);
-					//cost += checkAdvisor(assistant, course); //TODO advisor olayini cozmek lazim
+					cost += checkAdvisor(assistant, course); //TODO advisor olayini cozmek lazim
 					cost += checkAcademicBackground(assistant, course);
 
 
@@ -247,6 +247,7 @@ public class Cost {
 
 		int cost = 0;
 		String advMail = assistant.advisor.mail;
+		course.setID();
 		Instructor ins = dbh.getInstructorFromCourseID(course);
 		String insMail = ins.mail;
 
