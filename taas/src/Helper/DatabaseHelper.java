@@ -461,17 +461,18 @@ public class DatabaseHelper {
 		try{
 
 			c = connectToDatabase();
-			String sql = "Select * from Instructor";
+			String sql = "Select * from Course";
 			PreparedStatement ps = c.prepareStatement(sql);
 
 			ResultSet rs = ps.executeQuery();
 
 			while(rs.next()){
 
+				String code = rs.getString("Department_code");
 				int n = rs.getInt("number");
 				int capacity = rs.getInt("capacity");
 				int maxAsst = rs.getInt("maxAssistantNumber");
-				String code = rs.getString("Department_code");
+				
 
 				Course i = new Course(code, n, capacity, maxAsst);
 				result.add(i);

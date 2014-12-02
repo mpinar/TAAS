@@ -14,7 +14,7 @@ public class Cost {
 	ArrayList<Assistant> allAssistants;
 	ArrayList<Course> allCourses; 
 
-	double[][] costMatrix;
+	double[][] costMatrix = new double[9999][9999];
 
 	public Cost(ArrayList<Assistant> allAssistants, ArrayList<Course> allCourses) {
 
@@ -25,17 +25,17 @@ public class Cost {
 
 	public double[][] calculateCost(){
 		
-		int cost = 0;
 		int asstCount = 0;
 		int courseCount = 0;
 		for (Assistant assistant : allAssistants) {
 			
 			for (Course course : allCourses) {
-				
+
+				int cost = 0;
 				
 				cost += checkDepartment(assistant, course);
 				cost += checkTeachingBackground(assistant, course);
-				cost += checkAdvisor(assistant, course);
+				//cost += checkAdvisor(assistant, course); //TODO advisor olayini cozmek lazim
 				cost += checkAcademicBackground(assistant, course);
 				
 				
@@ -212,17 +212,22 @@ public class Cost {
 		ArrayList<String> background = assistant.teachingBackground;
 		
 		String fullCourseName = course.code + " " + course.number;
-		
+		boolean isAssisted = false;
 		if(background.size()>0){
 			result -= 2;
+		}else if(background.size() == 0){
+			result += 5;
 		}
 		for (int i = 0; i < background.size(); i++) {
 			String c = background.get(i);
 			if (fullCourseName.equalsIgnoreCase(c)) {
-				result -= 3;
-			} else {
-				result += 5;
+				isAssisted = true;
 			}
+		}
+		if(isAssisted){
+			result -= 3;
+		}else{
+			result += 3;
 		}
 		
 		return result;

@@ -73,7 +73,7 @@ public class Assistant {
 		// TODO Auto-generated method stub
 		dbh.addAssistantToDB(this);
 	}
-	
+		
 	public String toString(){
 		return this.name + " "+this.surname + " ["+ this.mail + "]"; 
 	}
