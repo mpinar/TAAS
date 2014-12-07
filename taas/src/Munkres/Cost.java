@@ -283,8 +283,11 @@ public class Cost {
 	private void printCostMatrix(){
 		
 		for (int i = 0; i < costMatrix.length; i++) {
+			System.out.println(allAssistants.get(i));
 			for (int j = 0; j < costMatrix[i].length; j++) {
+				
 				System.out.print(costMatrix[i][j] + "  ");
+				System.out.println(allCourses.get(j));
 			}
 			System.out.println();
 			

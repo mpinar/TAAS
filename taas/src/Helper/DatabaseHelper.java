@@ -148,44 +148,7 @@ public class DatabaseHelper {
 
 	}
 
-	/**
-	 *  Returns the instructor from it's ID 
-	 * @param insID
-	 * @return
-	 */
 
-	/*
-	 * username versyonu var zaten gerek kalmayabilir bu  methoda
-	 * 
-	public Instructor getInstructorFromID(int insID){
-		Connection c;
-		Instructor ins = null;
-		try {
-			c = connectToDatabase();
-			String sql = "Select * from Instructor where ID=?";
-
-			PreparedStatement ps = c.prepareStatement(sql);
-			ps.setInt(1, insID);
-
-			ResultSet result = ps.executeQuery();
-
-			while(result.next()) {
-				int instrID = result.getInt("ID");
-				int deptID = result.getInt("department_ID");
-				Department d = getDepartmentInformation(deptID);
-				ins = new Instructor(instrID, personID,d);
-
-			}
-
-			c.close();
-		} catch (InstantiationException | IllegalAccessException | SQLException e) {
-			e.printStackTrace();
-		}
-
-		return ins;
-
-	}
-	 */
 
 	/**
 	 * Returns the user after authorization from it's username
@@ -232,117 +195,7 @@ public class DatabaseHelper {
 		return ins;
 	}
 
-	/*
-	public ArrayList<Course> getTeachingInformationForInstructor(int instrID){  // TODO
-		Connection c;
-		ArrayList<Course> coursesHistory = new ArrayList<Course>();
-		try {
-			c = connectToDatabase();
-			String sql = "Select Course_ID,Section_ID from teaches where Instructor_ID=?";
-
-			PreparedStatement ps = c.prepareStatement(sql);
-			ps.setInt(1, instrID);
-
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()){
-				int courseID = rs.getInt("Course_ID");
-				int sectionID = rs.getInt("Section_ID");
-
-				Course course = getCourseInfoFromID(courseID);
-
-				coursesHistory.add(course);
-			}
-			c.close();
-
-		}catch (InstantiationException | IllegalAccessException | SQLException e) {
-			e.printStackTrace();
-		}
-
-		return coursesHistory;
-	}
-
-	 */
-
-	/*
-
-	public Course getCourseInfoFromID(int cID){ // TODO
-
-		Connection c;
-		Course course = null;
-
-		try {
-			c = connectToDatabase();
-			String sql = "Select * From Course where ID =?";
-
-			PreparedStatement ps = c.prepareStatement(sql);
-			ps.setInt(1, cID);
-
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()){
-				String title = rs.getString("title");
-				String deptCode = rs.getString("Department_Code");
-				int courseNumber = rs.getInt("number");
-				int asstCount = rs.getInt("assistant_count");
-
-				course = new Course(cID,title,deptCode,courseNumber,asstCount);
-				course.activities = getEventsForACourse(cID);
-			}
-			c.close();
-
-		}catch (InstantiationException | IllegalAccessException | SQLException e) {
-			e.printStackTrace();
-		}
-
-		return course;
-	}
-
-
-	 */
-
-	/*
-	public 	ArrayList<Instructor> getInstructorFromCourseID(int cID){ // TODO
-
-		Connection c;
-		Instructor ins = null;
-
-		ArrayList<Instructor> list = new ArrayList<Instructor>();
-		try{
-			c= connectToDatabase();
-			String sql = "Select person.*, ins.department_id ,ins.ID as instructorID from person natural join instructor as ins where ins.ID = ( "
-					+ "select distinct  instructor_ID from teaches natural join section "
-					+ "where year = ? and semester = ? and Course_ID = ?)";
-
-			PreparedStatement ps = c.prepareStatement(sql);
-			ps.setInt(3,cID);
-			ps.setInt(1, selectedYear);
-			ps.setString(2, selectedSemester);
-
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()){
-				int iID = rs.getInt("instructorID");
-				int pID = rs.getInt("ID");
-				String name = rs.getString("name");
-				String surname = rs.getString("surname");
-				String mail = rs.getString("mail");
-				boolean isAdmin = rs.getBoolean("isAdmin");
-				JobType j = JobType.getJobType(rs.getInt("jobType"));
-				Department d = getDepartmentInformation(rs.getInt("department_ID"));
-
-				ins = new Instructor(iID, pID, d);
-				ins.teaches = getTeachingInformationForInstructor(iID);
-				ins.setSuperFields(name, surname, mail, isAdmin);
-				System.out.println(ins);
-				list.add(ins);
-			}
-
-		}catch (InstantiationException | IllegalAccessException | SQLException e) {
-			e.printStackTrace();
-		}
-
-		return list;
-
-	}
-	 */
+	
 
 	public void updatePassword(int pID, String password){
 		Connection c;
@@ -1075,13 +928,6 @@ public class DatabaseHelper {
 			while(rs.next()){
 				String request = rs.getString("backgroundRequest");
 
-				//				StringTokenizer st = new StringTokenizer(request, ", ");
-				//
-				//				if(st.countTokens() != 0){
-				//					for (int i = 0; i <= st.countTokens(); i++) {
-				//						requests.add(st.nextToken());
-				//					}
-				//				}
 				if(request != null){
 					String[] backArr =request.split(", ");
 					for (int i = 0; i < backArr.length; i++) {
@@ -1118,14 +964,7 @@ public class DatabaseHelper {
 			while(rs.next()){
 				background = rs.getString("background");
 
-				//				StringTokenizer st = new StringTokenizer(background, ",");
-				//
-				//				if(st.countTokens() != 0){
-				//					for (int i = 0; i <= st.countTokens(); i++) {
-				//						requests.add(st.nextToken());
-				//					}
-				//				}
-
+			
 				String[] backArr =background.split(",");
 				for (int i = 0; i < backArr.length; i++) {
 					requests.add(backArr[i]);
@@ -1161,14 +1000,7 @@ public class DatabaseHelper {
 			while(rs.next()){
 				background = rs.getString("teachingBackground");
 
-				//				StringTokenizer st = new StringTokenizer(background, ",");
-				//
-				//				if(st.countTokens() != 0){
-				//					for (int i = 0; i < st.countTokens(); i++) {
-				//						requests.add(st.nextToken());
-				//					}
-				//				}
-
+				
 				String[] backArr =background.split(",");
 				for (int i = 0; i < backArr.length; i++) {
 					requests.add(backArr[i]);

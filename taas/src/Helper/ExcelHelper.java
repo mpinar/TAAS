@@ -111,7 +111,8 @@ public class ExcelHelper {
 				if(!ins.checkInstructorIsInDB()){ // Instructor is not in the database. Add it.
 					//createRandomPassword 
 					MailHelper mh = new MailHelper();
-					String rp =  mh.generateRandomPassword();
+					
+					String rp = EncryptionHelper.generatePass("test");
 					ins.addToDB(rp);
 
 					// course handling might change
@@ -127,7 +128,7 @@ public class ExcelHelper {
 			
 					
 					ins.addTeachingInfoToDB();
-					mh.sendEmail(ins,rp);
+			//		mh.sendEmail(ins,rp);
 				}else{
 					 // The instructor is in the database
 					// update teaches and request information
