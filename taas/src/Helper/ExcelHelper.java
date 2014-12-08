@@ -207,7 +207,6 @@ public class ExcelHelper {
 	
 	private Course createCourseFromString(String input){
 
-
 		Course c = null;
 
 		String[] arr = input.split(" ",2);
@@ -217,5 +216,9 @@ public class ExcelHelper {
 		c = new Course(code, number);
 		return c;
 
+	}
+
+	private void createOutputExcel(){
+		
 	}
 }
