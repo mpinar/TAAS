@@ -180,6 +180,7 @@ public class AdminView extends JFrame {
 				cost = new Cost(allAsst, coursesxmaxasst);
 				double[][] cm = cost.calculateCost();
 				Hungarian hung = new Hungarian(cm);
+				eh = new ExcelHelper();
 				eh.createOutputExcel(coursesxmaxasst, allAsst);
 			}
 		});

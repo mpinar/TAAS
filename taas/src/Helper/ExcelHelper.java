@@ -50,7 +50,9 @@ public class ExcelHelper {
 		} 
 	}
 
+	public ExcelHelper(){
 
+	}
 	public void setYearAndSemester(int y, String s){
 		year = y;
 		semester = s;
@@ -223,34 +225,34 @@ public class ExcelHelper {
 
 		XSSFWorkbook output = new XSSFWorkbook();
 		XSSFSheet outSheet = output.createSheet("Assistants");
-		
+
 		Row infoRow = outSheet.createRow(0);
 		Cell infoCell = infoRow.createCell(0);
 		Cell infoCell2 = infoRow.createCell(1);
 		Cell infoCell3 = infoRow.createCell(2);
-		
+
 		infoCell.setCellValue("Name");
 		infoCell2.setCellValue("Mail");
 		infoCell3.setCellValue("Class");
 		int rowNum =1;
-		
+
 		for (Assistant asst : assistant) {
 			for (Course cour : course){
-				
+
 				Row outRow = outSheet.createRow(rowNum);
 				Cell nameCell = outRow.createCell(0);
 				Cell mailCell = outRow.createCell(1);
 				Cell classCell = outRow.createCell(2);
-				
+
 				String firstName = asst.name;
 				String surname = asst.surname;
 				String name = firstName + " " + surname;
 				String mail = asst.mail;
-				
+
 				String courseName = cour.code;
 				int courseNumber = cour.number;
 				String className = courseName + " " + courseNumber;
-				
+
 				nameCell.setCellValue(name);
 				mailCell.setCellValue(mail);
 				classCell.setCellValue(className);
@@ -262,12 +264,12 @@ public class ExcelHelper {
 			out = new FileOutputStream(new File("Assistants.xlsx"));
 			output.write(out);
 			out.close();
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 
 	}
 }
