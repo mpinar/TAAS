@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+
 import Helper.DatabaseHelper;
 
 public class Course {
@@ -72,6 +74,18 @@ public class Course {
 		int reqCount = dbh.getRequestCountForCourse(this);
 		this.maxAssistantNumber = max - reqCount;
 		
+	}
+
+	public ArrayList<Request> getRequests(Instructor instructor) {
+		// TODO Auto-generated method stub
+		
+		return dbh.getRequests(this,instructor);
+		
+	}
+
+	public ArrayList<Instructor>  getTeachingInstructor() {
+		// TODO Auto-generated method stub
+		return dbh.getInstructorForCourse(this);
 	}
 	
 	//sadsadsa

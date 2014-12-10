@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -16,6 +19,8 @@ import javax.swing.JButton;
 import Helper.DatabaseHelper;
 import Helper.ExcelHelper;
 import Helper.TimeStorage;
+import Model.Assistant;
+import Model.Course;
 import Munkres.Cost;
 import Munkres.Hungarian;
 
@@ -35,6 +40,9 @@ public class AdminView extends JFrame {
 	String fileName = null;
 	private ExcelHelper eh;
 	private Cost cost;
+
+	private ArrayList<Assistant> allAsst;
+	private ArrayList<Course> allCourse;
 	//private JTextField newPass;
 	/**
 	 * Launch the application.
@@ -131,19 +139,53 @@ public class AdminView extends JFrame {
 		});
 		btnSelectFile.setBounds(250, 68, 117, 29);
 		contentPane.add(btnSelectFile);
-		
+
 		JButton btnCalculateCost = new JButton("Calculate Cost");
 		btnCalculateCost.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cost = new Cost(dbh.getAllAssistants(), dbh.getAllCourses());
+
+				allAsst = dbh.getAllAssistants();
+				allCourse = dbh.getAllCourses();
+				ArrayList<Course> coursesxmaxasst = new ArrayList<Course>();
+				for (int i = 0; i<allCourse.size(); i++){
+					Course c = allCourse.get(i);
+
+					if(c.maxAssistantNumber >1){
+						for(int k =0; k<c.maxAssistantNumber; k++){
+							coursesxmaxasst.add(k,c);
+						}
+					}
+				}
+				
+				
+				 // Sorts the new list in department order then the course number order.
+				Collections.sort(coursesxmaxasst, new Comparator<Course>() {
+			        @Override
+			        public int compare(Course c1, Course  c2)
+			        {
+			        	
+				        return c1.code.compareTo(c2.code);
+			        }
+			    });
+				
+				Collections.sort(coursesxmaxasst, new Comparator<Course>() {
+					
+					public int compare(Course c1, Course c2){
+						
+						return c1.number - c2.number;
+					}
+				});
+				
+				
+				cost = new Cost(allAsst, coursesxmaxasst);
 				double[][] cm = cost.calculateCost();
 				Hungarian hung = new Hungarian(cm);
-				
+
 			}
 		});
 		btnCalculateCost.setBounds(401, 68, 117, 29);
 		contentPane.add(btnCalculateCost);
-		
+
 		JButton btnMunkres = new JButton("MUNKRES");
 		btnMunkres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
