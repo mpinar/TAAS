@@ -43,7 +43,7 @@ public class DatabaseHelper {
 
 		try {
 			Class.forName(JDBC_DRIVER).newInstance();
-			System.out.println("Connecting to database...");
+			
 			conn = DriverManager.getConnection(DB_URL+DB_NAME, DB_UNAME, DB_PASS);
 
 		}catch (ClassNotFoundException e) {
