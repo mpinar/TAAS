@@ -221,7 +221,7 @@ public class ExcelHelper {
 
 	}
 
-	public void createOutputExcel(ArrayList<Course> course, ArrayList<Assistant> assistant){
+	public void createOutputExcel(ArrayList<Course> course, ArrayList<Assistant> assistant, int[][] assignment){
 
 		XSSFWorkbook output = new XSSFWorkbook();
 		XSSFSheet outSheet = output.createSheet("Assistants");
@@ -235,29 +235,36 @@ public class ExcelHelper {
 		infoCell2.setCellValue("Mail");
 		infoCell3.setCellValue("Class");
 		int rowNum =1;
+		for (int i=0; i<assignment.length; i++)
+		{
+			
+			int asstIndex = assignment[i][0];
+			int courseIndex = assignment[i][1];
+			
+			
+			Assistant asst = assistant.get(asstIndex);
+				Course cour = course.get(courseIndex);
 
-		for (Assistant asst : assistant) {
-			for (Course cour : course){
+					Row outRow = outSheet.createRow(rowNum);
+					Cell nameCell = outRow.createCell(0);
+					Cell mailCell = outRow.createCell(1);
+					Cell classCell = outRow.createCell(2);
 
-				Row outRow = outSheet.createRow(rowNum);
-				Cell nameCell = outRow.createCell(0);
-				Cell mailCell = outRow.createCell(1);
-				Cell classCell = outRow.createCell(2);
+					String firstName = asst.name;
+					String surname = asst.surname;
+					String name = firstName + " " + surname;
+					String mail = asst.mail;
 
-				String firstName = asst.name;
-				String surname = asst.surname;
-				String name = firstName + " " + surname;
-				String mail = asst.mail;
+					String courseName = cour.code;
+					int courseNumber = cour.number;
+					String className = courseName + " " + courseNumber;
 
-				String courseName = cour.code;
-				int courseNumber = cour.number;
-				String className = courseName + " " + courseNumber;
-
-				nameCell.setCellValue(name);
-				mailCell.setCellValue(mail);
-				classCell.setCellValue(className);
-			}
-			rowNum++;
+					nameCell.setCellValue(name);
+					mailCell.setCellValue(mail);
+					classCell.setCellValue(className);
+				
+				rowNum++;
+			
 		}
 		FileOutputStream out;
 		try {

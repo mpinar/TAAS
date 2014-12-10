@@ -179,9 +179,10 @@ public class AdminView extends JFrame {
 				
 				cost = new Cost(allAsst, coursesxmaxasst);
 				double[][] cm = cost.calculateCost();
-				Hungarian hung = new Hungarian(cm);
+				Hungarian hung = new Hungarian();
+				int[][] assignment = hung.runMunkres(cm);
 				eh = new ExcelHelper();
-				eh.createOutputExcel(coursesxmaxasst, allAsst);
+				eh.createOutputExcel(coursesxmaxasst, allAsst,assignment);
 			}
 		});
 		btnCalculateCost.setBounds(401, 68, 117, 29);

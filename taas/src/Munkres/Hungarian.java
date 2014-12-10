@@ -750,10 +750,33 @@ public class Hungarian {
 	}
 
 	
-
-	public Hungarian(double[][] costMatrix){
+	public int[][] runMunkres(double[][] cm){
 		
-deneme(costMatrix);
+		String sumType = "min";
+		
+		double[][] array = cm;
+
+		if (array.length > array[0].length){ //Rectangular matrix
+			array = transpose(array);
+		}
+
+
+		double startTime = System.nanoTime();	
+
+		int[][] assignment = new int[array.length][2];
+		assignment = hgAlgorithm(array, sumType);	//Call Hungarian algorithm.
+
+		double endTime = System.nanoTime();
+		
+		System.out.println("Execution of Munkres is finished...");
+		System.out.println("-------------------------");
+		return assignment;
+	}
+
+	public Hungarian(){
+		System.out.println("-------------------------");
+		System.out.println("Starting to execute Munkres...");
+		
 	}
 }
 
