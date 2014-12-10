@@ -3,6 +3,7 @@ package Helper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,10 +31,10 @@ public class ExcelHelper {
 	public int year;
 	public String semester;
 
-	
+
 	public ArrayList<Assistant> allAssistants = new ArrayList<Assistant>();
 	public ArrayList<Course> allCourses = new ArrayList<Course>();
-	
+
 	public ExcelHelper(String file){
 		try {
 			FileInputStream excelFile = new FileInputStream(chosenFile);
@@ -82,7 +83,7 @@ public class ExcelHelper {
 			}
 		}
 	}
-	
+
 	public void getInstructorsFromWorksheet(){
 		// TODO hala yapilacak seyler var
 
@@ -111,7 +112,7 @@ public class ExcelHelper {
 				if(!ins.checkInstructorIsInDB()){ // Instructor is not in the database. Add it.
 					//createRandomPassword 
 					MailHelper mh = new MailHelper();
-					
+
 					String rp = EncryptionHelper.generatePass("test");
 					ins.addToDB(rp);
 
@@ -120,24 +121,24 @@ public class ExcelHelper {
 					teaches = teaches.replaceAll(", ",",");
 					String[] t = teaches.split(",");
 
-				
+
 					for (String s : t) {
 						Course c = createCourseFromString(s);
 						ins.teaches.add(c);
 					}
-			
-					
+
+
 					ins.addTeachingInfoToDB();
-			//		mh.sendEmail(ins,rp);
+					//		mh.sendEmail(ins,rp);
 				}else{
-					 // The instructor is in the database
+					// The instructor is in the database
 					// update teaches and request information
-//
-//					ins.teaches.add(parseCourseName(teaches));
-//					ins.addTeachingInfoToDB();
+					//
+					//					ins.teaches.add(parseCourseName(teaches));
+					//					ins.addTeachingInfoToDB();
 				}
 			}else{
-				
+
 			}
 		}
 
@@ -171,7 +172,7 @@ public class ExcelHelper {
 			if(!mail.isEmpty()){
 				Department d = new Department(dept);
 				Assistant asst = new Assistant(name, surname, mail, d);
-			
+
 				// handle background
 
 				background = background.replaceAll(", ",",");
@@ -181,13 +182,13 @@ public class ExcelHelper {
 				teachingBack = teachingBack.replace(", ",",");
 				asst.setRawTBG(teachingBack);
 				asst.teachingBackground = convertBackgroundToList(teachingBack);
-				
+
 				asst.isActive = true;
 				asst.addAsstToDB();
 				asst.setAdvisorFromMail(advMail);
-				
+
 				allAssistants.add(asst);
-				
+
 			}
 		}
 
@@ -200,11 +201,11 @@ public class ExcelHelper {
 			String s = arr[i];
 			al.add(s);
 		}
-		
+
 		return al;
 
 	}
-	
+
 	private Course createCourseFromString(String input){
 
 		Course c = null;
@@ -218,7 +219,55 @@ public class ExcelHelper {
 
 	}
 
-	private void createOutputExcel(){
+	private void createOutputExcel(ArrayList<Course> course, ArrayList<Assistant> assistant){
+
+		XSSFWorkbook output = new XSSFWorkbook();
+		XSSFSheet outSheet = output.createSheet("Assistants");
 		
+		Row infoRow = outSheet.createRow(0);
+		Cell infoCell = infoRow.createCell(0);
+		Cell infoCell2 = infoRow.createCell(1);
+		Cell infoCell3 = infoRow.createCell(2);
+		
+		infoCell.setCellValue("Name");
+		infoCell2.setCellValue("Mail");
+		infoCell3.setCellValue("Class");
+		int rowNum =1;
+		
+		for (Assistant asst : assistant) {
+			for (Course cour : course){
+				
+				Row outRow = outSheet.createRow(rowNum);
+				Cell nameCell = outRow.createCell(0);
+				Cell mailCell = outRow.createCell(1);
+				Cell classCell = outRow.createCell(2);
+				
+				String firstName = asst.name;
+				String surname = asst.surname;
+				String name = firstName + " " + surname;
+				String mail = asst.mail;
+				
+				String courseName = cour.code;
+				int courseNumber = cour.number;
+				String className = courseName + " " + courseNumber;
+				
+				nameCell.setCellValue(name);
+				mailCell.setCellValue(mail);
+				classCell.setCellValue(className);
+			}
+			rowNum++;
+		}
+		FileOutputStream out;
+		try {
+			out = new FileOutputStream(new File("Assistants.xlsx"));
+			output.write(out);
+			out.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
 	}
 }
