@@ -3,9 +3,7 @@ package Munkres;
 import java.util.ArrayList;
 
 import Helper.DatabaseHelper;
-import Model.Assistant;
-import Model.Course;
-import Model.Instructor;
+import Model.*;
 
 public class Cost {
 
@@ -36,13 +34,14 @@ public class Cost {
 
 			for (Course course : allCourses) {
 
-				
+					course.setID();
 					int cost = 0;
 
 					cost += checkDepartment(assistant, course);
 					cost += checkTeachingBackground(assistant, course);
 					cost += checkAdvisor(assistant, course); //TODO advisor olayini cozmek lazim
 					cost += checkAcademicBackground(assistant, course);
+					cost += checkInstructorRequest(assistant, course);
 
 
 					costMatrix[asstCount][courseCount] = cost;
@@ -247,7 +246,6 @@ public class Cost {
 
 		int cost = 0;
 		String advMail = assistant.advisor.mail;
-		course.setID();
 		Instructor ins = dbh.getInstructorFromCourseID(course);
 		String insMail = ins.mail;
 
@@ -264,7 +262,6 @@ public class Cost {
 		int result = 0;
 
 		ArrayList<String> background = dbh.getBackgroundofAssistant(assistant);
-		course.setID();
 		ArrayList<String> requests = dbh.getBackgroundRequestFromCourse(course);
 
 		if(requests != null){
@@ -280,6 +277,30 @@ public class Cost {
 		return result;
 	}
 
+	public int checkInstructorRequest(Assistant assistant, Course course){
+		int result =0;
+		ArrayList<Instructor>  teachers = course.getTeachingInstructor();
+		ArrayList<Request> requests  = new ArrayList<Request>();
+		for (Instructor instructor : teachers) {
+		
+			requests.addAll(course.getRequests(instructor));
+		}
+		
+		
+		if (!requests.isEmpty()){
+			
+			for (Request r : requests) {
+				
+				if (r.assistantID == assistant.id){
+					result -= 15;
+				}
+			}
+			
+		}
+		return result;
+		
+	}
+	
 	private void printCostMatrix(){
 		
 		for (int i = 0; i < costMatrix.length; i++) {

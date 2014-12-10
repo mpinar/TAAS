@@ -195,7 +195,7 @@ public class DatabaseHelper {
 		return ins;
 	}
 
-	
+
 
 	public void updatePassword(int pID, String password){
 		Connection c;
@@ -283,25 +283,25 @@ public class DatabaseHelper {
 		Connection c;
 		Instructor i = null;
 		try{
-			
+
 			c= connectToDatabase();
-			
+
 			String sql = "Select *,count(instructor.id) as count from instructor join advisor on instructor_id = instructor.id where assistant_id = ?";
-			
+
 			PreparedStatement ps = c.prepareStatement(sql);
 			ps.setInt(1, asst.id);		
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				if(rs.getInt("count") == 1){
-				String n = rs.getString("name");
-				String s = rs.getString("surname");
-				String m = rs.getString("mail");
-				Department d = getDepartmentInformation(rs.getString("department_code"));
+					String n = rs.getString("name");
+					String s = rs.getString("surname");
+					String m = rs.getString("mail");
+					Department d = getDepartmentInformation(rs.getString("department_code"));
 
-				i = new Instructor(n, s, m, d);
+					i = new Instructor(n, s, m, d);
 				}
 			}
-		
+
 			c.close();
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
@@ -964,7 +964,7 @@ public class DatabaseHelper {
 			while(rs.next()){
 				background = rs.getString("background");
 
-			
+
 				String[] backArr =background.split(",");
 				for (int i = 0; i < backArr.length; i++) {
 					requests.add(backArr[i]);
@@ -1000,7 +1000,7 @@ public class DatabaseHelper {
 			while(rs.next()){
 				background = rs.getString("teachingBackground");
 
-				
+
 				String[] backArr =background.split(",");
 				for (int i = 0; i < backArr.length; i++) {
 					requests.add(backArr[i]);
@@ -1015,6 +1015,68 @@ public class DatabaseHelper {
 
 		return requests;
 
+	}
+
+	public ArrayList<Request> getRequests(Course course, Instructor instructor) {
+		// TODO Auto-generated method stub
+
+		ArrayList<Request> requests = new ArrayList<>();
+
+		Connection c; 
+
+		try{
+
+			c = connectToDatabase();
+			String sql = "select distinct assistant_id from request where course_id = ? && Instructor_id =?";
+
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, course.id);
+			ps.setInt(2, instructor.id);
+
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()){
+
+				int asstID = rs.getInt("assistant_id");
+				Request r = new Request(instructor.id, asstID, course.id);
+				requests.add(r);
+
+			}
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		return requests;
+	}
+
+	public ArrayList<Instructor> getInstructorForCourse(Course course) {
+		// TODO Auto-generated method stub
+		ArrayList<Instructor> teachers = new ArrayList<Instructor>();
+		Instructor i = null;
+		Connection c; 
+
+		try{
+			c = connectToDatabase();
+			String sql = "Select distinct id,department_code,name,surname,mail from teaches t join instructor i on i.id = t.instructor_id  where course_id = ?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, course.id);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				
+				String n = rs.getString("name");
+				String s = rs.getString("surname");
+				String mail = rs.getString("mail");
+				Department d = getDepartmentInformation(rs.getString("department_code"));
+				i = new Instructor(n, s, mail, d);
+				i.id = rs.getInt("id");
+				teachers.add(i);
+			}
+			c.close();
+			
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+		return teachers;
 	}
 
 }
