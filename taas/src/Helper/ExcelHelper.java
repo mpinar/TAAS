@@ -219,7 +219,7 @@ public class ExcelHelper {
 
 	}
 
-	private void createOutputExcel(ArrayList<Course> course, ArrayList<Assistant> assistant){
+	public void createOutputExcel(ArrayList<Course> course, ArrayList<Assistant> assistant){
 
 		XSSFWorkbook output = new XSSFWorkbook();
 		XSSFSheet outSheet = output.createSheet("Assistants");
