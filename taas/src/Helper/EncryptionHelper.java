@@ -757,10 +757,10 @@ public class EncryptionHelper {
 		}
 	
 //	
-//	public static void main(String args[]){
-//		
-//		String t = "test";
-//		System.out.println(generatePass(t));
-//		
-//	}
+	public static void main(String args[]){
+		
+		String t = "test";
+		System.out.println(generatePass(t));
+		
+	}
 }

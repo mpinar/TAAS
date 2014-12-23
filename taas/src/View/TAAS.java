@@ -1,9 +1,11 @@
 package View;
 
-import java.awt.EventQueue;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import Helper.*;
@@ -15,6 +17,9 @@ public class TAAS {
 	private JTextField tfUsername;
 	private JTextField tfPassword;
 	private DatabaseHelper dbh;
+	
+	private Image bg;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -44,9 +49,19 @@ public class TAAS {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
+		// Set background
+		try {
+			 bg = ImageIO.read(new File("taas_bg.jpg"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
+		
+		
 		JLabel lblPassword = new JLabel("Password : ");
 		lblPassword.setBounds(85, 119, 71, 16);
 		frame.getContentPane().add(lblPassword);
@@ -109,4 +124,11 @@ public class TAAS {
 
 
 	}
+
+	 public void paintComponent(Graphics g)
+	    {
+	        // Draws the img to the BackgroundPanel.
+	        g.drawImage(bg, 0, 0, null);
+	    }
+
 }

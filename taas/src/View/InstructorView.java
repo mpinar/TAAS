@@ -1,12 +1,14 @@
 package View;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.imageio.ImageIO;
 
 import Helper.DatabaseHelper;
 import Model.Assistant;
@@ -14,23 +16,14 @@ import Model.Course;
 import Model.Department;
 import Model.Instructor;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import javax.swing.ScrollPaneConstants;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.Font;
+
+
+
+
+
+import java.io.File;
+import java.io.IOException;
 
 public class InstructorView extends JFrame {
 
@@ -60,10 +53,12 @@ public class InstructorView extends JFrame {
 		dbh = new DatabaseHelper();
 		instructor = inst;
 
+	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 688, 298);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -308,4 +303,6 @@ public class InstructorView extends JFrame {
 		contentPane.remove(assistantBox);
 		contentPane.remove(btnRequest);
 	}
+	
+	
 }
