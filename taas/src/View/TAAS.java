@@ -2,6 +2,7 @@ package View;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -38,32 +39,36 @@ public class TAAS {
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public TAAS() {
+	public TAAS() throws IOException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws IOException 
 	 */
-	private void initialize() {
+	private void initialize() throws IOException {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 550, 350);
+
+			BufferedImage image = ImageIO.read(new File("taas_bg.jpg"));
+			frame.setContentPane(new JLabel(new ImageIcon(image)));
+			frame.setSize(image.getWidth()	,image.getHeight());
+
 		// Set background
-		try {
+	
 			 bg = ImageIO.read(new File("taas_bg.jpg"));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
 		
-		
-		JLabel lblPassword = new JLabel("Password : ");
-		lblPassword.setBounds(85, 119, 71, 16);
+		BufferedImage passIcon = ImageIO.read(new File("lock.jpg"));
+		JLabel lblPassword = new JLabel(new ImageIcon(passIcon));
+		lblPassword.setBounds(85, 119, 20, 20);
 		frame.getContentPane().add(lblPassword);
 
 		tfUsername = new JTextField();
