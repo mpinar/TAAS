@@ -97,16 +97,23 @@ public class ExcelHelper {
 			Row row = instructorRowIterator.next();
 
 			Cell nameCell = row.getCell(0);
-			Cell surnameCell = row.getCell(1);
-			Cell mailCell = row.getCell(2);
-			Cell deptCell = row.getCell(3);
-			Cell coursesCell = row.getCell(4);
+			Cell mailCell = row.getCell(1);
+			Cell deptCell = row.getCell(2);
+			Cell coursesCell = row.getCell(3);
 
-			String name = nameCell.getStringCellValue();
-			String surname = surnameCell.getStringCellValue();
+			String wholeName = nameCell.getStringCellValue();
+			
+			String[] splitted = wholeName.split(" ");
+			String name = "";
+			for (int i = 0; i < splitted.length - 1; i++) {
+				String s = splitted[i];
+				name +=s+" ";
+			}
+			String surname = splitted[splitted.length - 1];
 			String mail = mailCell.getStringCellValue();
 			String deptCode = deptCell.getStringCellValue();
 			String teaches = coursesCell.getStringCellValue();
+
 
 			if(!(name.isEmpty() || surname.isEmpty() || mail.isEmpty() || deptCode.isEmpty() )){
 				Department d = new Department(deptCode);
