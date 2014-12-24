@@ -63,6 +63,7 @@ public class AdminView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
 	public AdminView() {
 		dbh = new DatabaseHelper();
 
@@ -137,7 +138,7 @@ public class AdminView extends JFrame {
 			}
 
 		});
-		btnSelectFile.setBounds(250, 68, 117, 29);
+		btnSelectFile.setBounds(28, 68, 130, 29);
 		contentPane.add(btnSelectFile);
 
 		JButton btnCalculateCost = new JButton("Calculate Cost");
@@ -185,20 +186,38 @@ public class AdminView extends JFrame {
 				eh.createOutputExcel(coursesxmaxasst, allAsst,assignment);
 			}
 		});
-		btnCalculateCost.setBounds(401, 68, 117, 29);
+		btnCalculateCost.setBounds(170, 68, 117, 29);
 		contentPane.add(btnCalculateCost);
 
-		JButton btnMunkres = new JButton("MUNKRES");
+		JButton btnMunkres = new JButton("Assign Assistants");
 		btnMunkres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnMunkres.setBounds(323, 106, 117, 29);
+		btnMunkres.setBounds(469, 68, 145, 29);
 		contentPane.add(btnMunkres);
+		
+		JButton btnClearDB = new JButton("Clear Database");
+		btnClearDB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				boolean b = dbh.clearDatabase();
+				if(b){
+					String cd = "Database has been cleared.";
+					JOptionPane.showMessageDialog(getParent(), cd, "Success", JOptionPane.INFORMATION_MESSAGE);
+				}else{
+					String cd = "An error occured during the database clearing operation.";
+					JOptionPane.showMessageDialog(getParent(), cd, "Error", JOptionPane.INFORMATION_MESSAGE);
+				}
+				
+			}
+		});
+		btnClearDB.setBounds(299, 68, 158, 29);
+		contentPane.add(btnClearDB);
 
 
 	}
-
+	
 	private void readExcel(){
 		eh.getCoursesFromWorksheet();
 		eh.getInstructorsFromWorksheet();
