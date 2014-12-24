@@ -276,7 +276,7 @@ public class ExcelHelper {
 		{
 			int courseIndex=0;
 			int asstIndex =0;
-			if(course.size() > assistant.size()){
+			if(course.size() < assistant.size()){
 				courseIndex = assignment[i][0];
 				asstIndex = assignment[i][1];
 			}else{
