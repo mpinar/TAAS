@@ -156,21 +156,31 @@ public class ExcelHelper {
 			Row row= assistantRowIterator.next();
 
 			Cell nameCell = row.getCell(0);
-			Cell surnameCell = row.getCell(1);
-			Cell mailCell = row.getCell(2);
-			Cell deptCell = row.getCell(3);
-			Cell advisorCell = row.getCell(4);
-			Cell backgroundCell = row.getCell(5);
-			Cell teachingBackCell = row.getCell(6);
+			Cell mailCell = row.getCell(1);
+			Cell deptCell = row.getCell(2);
+			Cell advisorCell = row.getCell(3);
+			Cell backgroundCell = row.getCell(4);
+			Cell teachingBackCell = row.getCell(5);
+			Cell kusisIDCell = row.getCell(6);
+			
+			String wholeName = nameCell.getStringCellValue();
+			
+			String[] splitted = wholeName.split(" ");
+			String name = "";
+			for (int i = 0; i < splitted.length - 1; i++) {
+				String s = splitted[i];
+				name +=s+" ";
+			}
 
-			String name = nameCell.getStringCellValue();
-			String surname = surnameCell.getStringCellValue();
+			String surname = splitted[splitted.length - 1];
 			String mail = mailCell.getStringCellValue();
 			String dept = deptCell.getStringCellValue();
 			String advMail = advisorCell.getStringCellValue();
 			String background = backgroundCell.getStringCellValue();
 			String teachingBack = teachingBackCell.getStringCellValue();
-
+			int kusisID = Integer.parseInt(kusisIDCell.getStringCellValue());
+			
+			
 			if(!mail.isEmpty()){
 				Department d = new Department(dept);
 				Assistant asst = new Assistant(name, surname, mail, d);
