@@ -22,7 +22,7 @@ import Model.Instructor;
 
 
 public class ExcelHelper {
-	static String chosenFile = "TAAS EXCEL.xlsx";
+	
 
 	XSSFSheet instructors;
 	XSSFSheet assistants;
@@ -37,7 +37,7 @@ public class ExcelHelper {
 
 	public ExcelHelper(String file){
 		try {
-			FileInputStream excelFile = new FileInputStream(chosenFile);
+			FileInputStream excelFile = new FileInputStream(file);
 			XSSFWorkbook workbook = new XSSFWorkbook(excelFile);
 
 
@@ -69,15 +69,17 @@ public class ExcelHelper {
 				Row row = coursesRowIterator.next();
 
 				Cell codeCell = row.getCell(0);
-				Cell numberCell = row.getCell(1);
-				Cell capacityCell = row.getCell(2);
+				Cell capacityCell = row.getCell(1);
 
 				String code = codeCell.getStringCellValue();
-				int number = (int) numberCell.getNumericCellValue();
+				String[] coursecodenumber = code.split(" ");
+				String ccode = coursecodenumber[0];
+				int number = Integer.parseInt(coursecodenumber[1]); // TODO numarasiz derslerin chek olayi
 				int capacity = (int) capacityCell.getNumericCellValue();
+			
 
 				if(!code.isEmpty()){
-					Course course = new Course(code, number, capacity);
+					Course course = new Course(ccode, number, capacity);
 					course.addCourseToDatabase();
 					allCourses.add(course);
 				}
@@ -232,8 +234,14 @@ public class ExcelHelper {
 		String[] arr = input.split(" ",2);
 
 		String code = arr[0];
+		if(arr[1].length() == 3){
 		int number = Integer.parseInt(arr[1]);
 		c = new Course(code, number);
+		}else{ // course bi garip bunlarin kodu 999 olsun
+			int number = 999;
+			c = new Course(code, number);
+		}
+		
 		return c;
 
 	}
