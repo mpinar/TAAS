@@ -57,37 +57,40 @@ public class TAAS {
 			frame.setContentPane(new JLabel(new ImageIcon(image)));
 			frame.setSize(image.getWidth()	,image.getHeight());
 
-		// Set background
 	
-			 bg = ImageIO.read(new File("taas_bg.jpg"));
-	
-		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
+		// Logo
+		JLabel logo = new JLabel("Username : ");
+		logo.setIcon(new ImageIcon("Images/ku_logo.jpg"));
+		logo.setBounds(10, 10, 150, 50);
+		frame.getContentPane().add(logo);
 		
-		BufferedImage passIcon = ImageIO.read(new File("lock.jpg"));
-		JLabel lblPassword = new JLabel(new ImageIcon(passIcon));
-		lblPassword.setBounds(85, 119, 20, 20);
-		frame.getContentPane().add(lblPassword);
-
-		tfUsername = new JTextField();
-
-		tfUsername.setBounds(168, 72, 218, 28);
-		tfUsername.setColumns(17);
-		frame.getContentPane().add(tfUsername);
-
+		// Set username area
 		JLabel lblUsername = new JLabel("Username : ");
-		lblUsername.setBounds(82, 78, 74, 16);
+		lblUsername.setIcon(new ImageIcon("Images/username_icon.jpg"));
+		lblUsername.setBounds(230, 60, 30, 30);
 		frame.getContentPane().add(lblUsername);
 
+		tfUsername = new JTextField();
+		tfUsername.setBounds(260, 60, 200, 30);
+		tfUsername.setColumns(17);
+		frame.getContentPane().add(tfUsername);
+		// Set password area
+		JLabel lblPassword = new JLabel("Password :");
+		lblPassword.setIcon(new ImageIcon("Images/passwordIcon.jpg"));
+		lblPassword.setBounds(230, 105, 30, 30);
+		frame.getContentPane().add(lblPassword);
+		
 		tfPassword = new JPasswordField();
-
-		tfPassword.setBounds(168, 113, 218, 28);
+		tfPassword.setBounds(260, 105, 200, 30);
 		tfPassword.setColumns(10);
 		frame.getContentPane().add(tfPassword);
 
 		JButton btnLogin = new JButton("Login");
+		ImageIcon io = new ImageIcon("Images/button-red-login.jpg");
+		btnLogin.setIcon(io);
 		btnLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -123,7 +126,9 @@ public class TAAS {
 				}
 			}
 		});
-		btnLogin.setBounds(218, 153, 117, 29);
+		
+		btnLogin.setSize(io.getIconWidth()-16, io.getIconHeight());
+		btnLogin.setLocation(315, 145);
 		frame.getContentPane().add(btnLogin);
 
 
