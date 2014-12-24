@@ -206,8 +206,19 @@ public class ExcelHelper {
 
 				asst.isActive = true;
 				asst.addAsstToDB();
-				asst.setAdvisorFromMail(advMail);
+				if (!advMail.isEmpty()){
+					advMail = advMail.replaceAll("; ", ",");
+					
+					String[] advisors = advMail.split(",");
+					if(advisors.length > 1){
+						for (int i = 0; i < advisors.length; i++) {
+							asst.setAdvisorFromMail(advisors[i]);
+						}
 
+					}else if(advisors.length == 1){
+						asst.setAdvisorFromMail(advMail);
+					}
+				}
 				allAssistants.add(asst);
 
 			}
