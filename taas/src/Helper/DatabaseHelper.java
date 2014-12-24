@@ -9,6 +9,8 @@ package Helper;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.StringTokenizer;
 
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
@@ -43,8 +45,8 @@ public class DatabaseHelper {
 
 		try {
 			Class.forName(JDBC_DRIVER).newInstance();
-			
-			conn = DriverManager.getConnection(DB_URL+DB_NAME, DB_UNAME, DB_PASS);
+
+			conn = DriverManager.getConnection(DB_URL+DB_NAME+"?useUnicode=true&characterEncoding=utf8", DB_UNAME, DB_PASS);
 
 		}catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -1062,7 +1064,7 @@ public class DatabaseHelper {
 			ps.setInt(1, course.id);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
-				
+
 				String n = rs.getString("name");
 				String s = rs.getString("surname");
 				String mail = rs.getString("mail");
@@ -1072,13 +1074,13 @@ public class DatabaseHelper {
 				teachers.add(i);
 			}
 			c.close();
-			
+
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
 		}
 		return teachers;
 	}
-	
+
 	public boolean clearDatabase() {
 		// TODO Auto-generated method stub
 		boolean result =false;
@@ -1092,18 +1094,100 @@ public class DatabaseHelper {
 			s.addBatch("delete from assistant");
 			s.addBatch("delete from course");
 			s.addBatch("delete from instructor");
-			
-			
+
+
 			int[] r = s.executeBatch();
 			if (r[0]>0){
 				result = true;
 			}
 		}catch (InstantiationException | IllegalAccessException | SQLException e){
 			e.printStackTrace();
-			
-		
-	}
+
+
+		}
 		return result;
 	}
 
+	public void addCostToDB(int aid, int cid, int cost) {
+		// TODO Auto-generated method stub
+		Connection c;
+		try
+		{
+			c =  connectToDatabase();
+			String sql = "Insert into Cost (Assistant_ID,Course_ID,cost) values(?,?,?)";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, aid);
+			ps.setInt(2, cid);
+			ps.setInt(3, cost);
+			int s = ps.executeUpdate();
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+
+
+		}
+	}
+
+	public HashMap<Course, Integer> getCostsForAssistant(int id2) {
+		// TODO Auto-generated method stub
+
+		Connection c;
+		HashMap<Course, Integer> hm = new HashMap<Course, Integer>();
+		try{
+
+			c = connectToDatabase();
+			String sql = "Select Course_id,cost from Cost where assistant_id= ?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, id2);
+
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				int cid = rs.getInt("Course_id");
+				int cost = rs.getInt("cost");
+				Course co = getCourseFromID(cid);
+				
+				hm.put(co, cost);
+			}
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return hm;
+	}
+
+	private Course getCourseFromID(int cid) {
+
+		Connection c;
+
+		Course co = null;
+		try{
+
+			c = connectToDatabase();
+			String sql = "Select * from course where id= ?";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, cid);
+
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				
+				//Department d = getDepartmentInformation(rs.getString("department_code"));
+				String code = rs.getString("department_code");
+				int no = rs.getInt("number");
+				int capacity = rs.getInt("capacity");
+				int max = rs.getInt("maxassistantnumber");
+				
+				 co = new Course(code,no,capacity,max);
+			
+			}
+			c.close();
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+		}
+
+		return co;
+	}
+
 }
+
+

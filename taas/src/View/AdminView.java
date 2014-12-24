@@ -7,6 +7,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -43,6 +45,7 @@ public class AdminView extends JFrame {
 
 	private ArrayList<Assistant> allAsst;
 	private ArrayList<Course> allCourse;
+	ArrayList<Course> coursesxmaxasst;
 	//private JTextField newPass;
 	/**
 	 * Launch the application.
@@ -145,45 +148,19 @@ public class AdminView extends JFrame {
 		btnCalculateCost.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				allAsst = dbh.getAllAssistants();
-				allCourse = dbh.getAllCourses();
-				ArrayList<Course> coursesxmaxasst = new ArrayList<Course>();
-				for (int i = 0; i<allCourse.size(); i++){
-					Course c = allCourse.get(i);
-
-					if(c.maxAssistantNumber >1){
-						for(int k =0; k<c.maxAssistantNumber; k++){
-							coursesxmaxasst.add(k,c);
-						}
-					}
-				}
+				getInformation();
 				
 				
 				 // Sorts the new list in department order then the course number order.
-				Collections.sort(coursesxmaxasst, new Comparator<Course>() {
-			        @Override
-			        public int compare(Course c1, Course  c2)
-			        {
-			        	
-				        return c1.code.compareTo(c2.code);
-			        }
-			    });
-				
-				Collections.sort(coursesxmaxasst, new Comparator<Course>() {
-					
-					public int compare(Course c1, Course c2){
-						
-						return c1.number - c2.number;
-					}
-				});
+			
 				
 				
-				cost = new Cost(allAsst, coursesxmaxasst);
+				cost = new Cost(allAsst, allCourse);
 				double[][] cm = cost.calculateCost();
-				Hungarian hung = new Hungarian();
-				int[][] assignment = hung.runMunkres(cm);
-				eh = new ExcelHelper();
-				eh.createOutputExcel(coursesxmaxasst, allAsst,assignment);
+			//	Hungarian hung = new Hungarian();
+				//int[][] assignment = hung.runMunkres(cm);
+				//eh = new ExcelHelper();
+				//eh.createOutputExcel(coursesxmaxasst, allAsst,assignment);
 			}
 		});
 		btnCalculateCost.setBounds(170, 68, 117, 29);
@@ -192,6 +169,40 @@ public class AdminView extends JFrame {
 		JButton btnMunkres = new JButton("Assign Assistants");
 		btnMunkres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				getInformation();
+				double[][] cm = new double[allAsst.size()][coursesxmaxasst.size()];
+				HashMap<Course,Integer> hm ;
+				for (int i=0; i<allAsst.size(); i++) {
+					Assistant assistant = allAsst.get(i);
+					hm = assistant.getCostsForCourses(assistant.id);
+					int courseCount = 0;
+					
+					for (Course course : coursesxmaxasst) {
+						int cost = hm.get(course);
+						
+						cm[i][courseCount]= cost;
+						courseCount++;
+					}
+					
+//					for(int j=0; j<cm[i].length; j++){
+//						System.out.println(i+"."+j+") Course Count = " + courseCount);
+//					}
+					
+				}
+				
+				//for(int j=0; j<)
+				Hungarian hung = new Hungarian();
+				int[][] assignment = hung.runMunkres(cm);
+				
+				for(int j=0; j<assignment.length; j++){
+					System.out.print("Assignment # "+j+" = ");
+					for(int k =1; k<assignment[j].length; k++){
+						System.out.print(assignment[j][k-1]+" ------> "+assignment[j][k]+"\n");	
+					}
+				}
+				eh = new ExcelHelper();
+				eh.createOutputExcel(coursesxmaxasst, allAsst,assignment);
 			}
 		});
 		btnMunkres.setBounds(469, 68, 145, 29);
@@ -224,5 +235,39 @@ public class AdminView extends JFrame {
 		eh.getAssistantsFromWorksheet();
 
 
+	}
+
+	private void getInformation() {
+		allAsst = dbh.getAllAssistants();
+		allCourse = dbh.getAllCourses();
+		 coursesxmaxasst = new ArrayList<Course>();
+		for (int i = 0; i<allCourse.size(); i++){
+			Course c = allCourse.get(i);
+
+			if(c.maxAssistantNumber >1){
+				for(int k =0; k<c.maxAssistantNumber; k++){
+					coursesxmaxasst.add(k,c);
+				}
+			}
+		}
+		
+		Collections.sort(allCourse, new Comparator<Course>() {
+	        @Override
+	        public int compare(Course c1, Course  c2)
+	        {
+	        	
+		        return c1.code.compareTo(c2.code);
+	        }
+	    });
+		
+		Collections.sort(allCourse, new Comparator<Course>() {
+			
+			public int compare(Course c1, Course c2){
+				
+				return c1.number - c2.number;
+			}
+		});
+		
+		
 	}
 }

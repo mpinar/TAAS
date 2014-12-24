@@ -2,6 +2,8 @@ package Model;
 
 import java.util.ArrayList;
 
+import com.sun.org.apache.xpath.internal.operations.Equals;
+
 import Helper.DatabaseHelper;
 
 public class Course {
@@ -23,7 +25,7 @@ public class Course {
 		setMaxAssistantNumber(capacity);
 		updateMaxAssistantCount();
 	}
-	
+
 	// use this only adding course to db
 	public Course(String c, int n, int capacity) { 
 		code = c;
@@ -31,6 +33,7 @@ public class Course {
 		this.capacity = capacity;
 		setMaxAssistantNumber(capacity);
 		dbh = new DatabaseHelper();
+		setID();
 	}
 
 
@@ -40,7 +43,8 @@ public class Course {
 		this.number = number;
 		this.capacity = capacity;
 		this.maxAssistantNumber = maxasst;
-		
+		setID();
+
 	}
 	private void setMaxAssistantNumber(int c) {
 
@@ -69,24 +73,37 @@ public class Course {
 	}
 	public void updateMaxAssistantCount() {
 		// TODO get max asst count subtract request number
-		
+
 		int max = dbh.getMaxAssistantCountForCourse(this);
 		int reqCount = dbh.getRequestCountForCourse(this);
 		this.maxAssistantNumber = max - reqCount;
-		
+
 	}
 
 	public ArrayList<Request> getRequests(Instructor instructor) {
 		// TODO Auto-generated method stub
-		
+
 		return dbh.getRequests(this,instructor);
-		
+
 	}
 
 	public ArrayList<Instructor>  getTeachingInstructor() {
 		// TODO Auto-generated method stub
 		return dbh.getInstructorForCourse(this);
 	}
-	
-	//sadsadsa
+	@Override
+	public boolean equals(Object o){
+		if (o == null) return false;
+		if (!(o instanceof Course)) return false;
+
+		Course c1 = (Course) o;
+
+		return c1.code.equalsIgnoreCase(this.code) && (c1.number == this.number);
+
+	}
+	@Override
+	public int hashCode(){
+		
+		return (int) this.id;
+	}
 }

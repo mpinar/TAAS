@@ -25,7 +25,8 @@ public class Cost {
 
 
 
-
+	private Course lastCourse;
+	private int lastCost;
 	public double[][] calculateCost(){
 
 		int asstCount = 0;
@@ -33,21 +34,35 @@ public class Cost {
 		for (Assistant assistant : allAssistants) {
 
 			for (Course course : allCourses) {
-
-					course.setID();
-					int cost = 0;
-
+				System.out.println(assistant + "\t" + course.code + course.number);
+				course.setID();
+				int cost = 0;
+	
+				if (lastCourse != null){
+					if (!(course.code.equalsIgnoreCase(lastCourse.code) && course.number == lastCourse.number)){
+						cost += checkDepartment(assistant, course);
+						cost += checkTeachingBackground(assistant, course);
+						cost += checkAdvisor(assistant, course); //TODO advisor olayini cozmek lazim
+						cost += checkAcademicBackground(assistant, course);
+						cost += checkInstructorRequest(assistant, course);
+					}else{
+						cost = lastCost;
+					}
+				}else{
 					cost += checkDepartment(assistant, course);
 					cost += checkTeachingBackground(assistant, course);
 					cost += checkAdvisor(assistant, course); //TODO advisor olayini cozmek lazim
 					cost += checkAcademicBackground(assistant, course);
 					cost += checkInstructorRequest(assistant, course);
-
-
-					costMatrix[asstCount][courseCount] = cost;
-					courseCount++;
 				}
-			
+				
+				costMatrix[asstCount][courseCount] = cost;
+				dbh.addCostToDB(assistant.id,course.id,cost);
+				lastCourse = course;
+				lastCost = cost;
+				courseCount++;
+			}
+
 			asstCount++;
 			courseCount = 0;
 		}
@@ -245,14 +260,19 @@ public class Cost {
 	public int checkAdvisor(Assistant assistant, Course course){
 
 		int cost = 0;
-		String advMail = assistant.advisor.mail;
-		Instructor ins = dbh.getInstructorFromCourseID(course);
-		String insMail = ins.mail;
+		if(assistant.advisor != null){
+			String advMail = assistant.advisor.mail;
+			if(!advMail.isEmpty())
+			{
+				Instructor ins = dbh.getInstructorFromCourseID(course);
 
-		if (advMail.equalsIgnoreCase(insMail)) {
-			cost = -2;
+				String insMail = ins.mail;
+
+				if (advMail.equalsIgnoreCase(insMail)) {
+					cost = -2;
+				}
+			}
 		}
-
 		return cost;
 
 	}
@@ -282,36 +302,36 @@ public class Cost {
 		ArrayList<Instructor>  teachers = course.getTeachingInstructor();
 		ArrayList<Request> requests  = new ArrayList<Request>();
 		for (Instructor instructor : teachers) {
-		
+
 			requests.addAll(course.getRequests(instructor));
 		}
-		
-		
+
+
 		if (!requests.isEmpty()){
-			
+
 			for (Request r : requests) {
-				
+
 				if (r.assistantID == assistant.id){
 					result -= 15;
 				}
 			}
-			
+
 		}
 		return result;
-		
+
 	}
-	
+
 	private void printCostMatrix(){
-		
+
 		for (int i = 0; i < costMatrix.length; i++) {
 			System.out.println(allAssistants.get(i));
 			for (int j = 0; j < costMatrix[i].length; j++) {
-				
+
 				System.out.print(costMatrix[i][j] + "  ");
 				System.out.println(allCourses.get(j));
 			}
 			System.out.println();
-			
+
 		}
 	}
 }

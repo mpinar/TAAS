@@ -22,7 +22,7 @@ import Model.Instructor;
 
 
 public class ExcelHelper {
-	
+
 
 	XSSFSheet instructors;
 	XSSFSheet assistants;
@@ -76,7 +76,7 @@ public class ExcelHelper {
 				String ccode = coursecodenumber[0];
 				int number = Integer.parseInt(coursecodenumber[1]); // TODO numarasiz derslerin chek olayi
 				int capacity = (int) capacityCell.getNumericCellValue();
-			
+
 
 				if(!code.isEmpty()){
 					Course course = new Course(ccode, number, capacity);
@@ -104,7 +104,7 @@ public class ExcelHelper {
 			Cell coursesCell = row.getCell(3);
 
 			String wholeName = nameCell.getStringCellValue();
-			
+
 			String[] splitted = wholeName.split(" ");
 			String name = "";
 			for (int i = 0; i < splitted.length - 1; i++) {
@@ -171,9 +171,9 @@ public class ExcelHelper {
 			Cell backgroundCell = row.getCell(4);
 			Cell teachingBackCell = row.getCell(5);
 			Cell kusisIDCell = row.getCell(6);
-			
+
 			String wholeName = nameCell.getStringCellValue();
-			
+
 			String[] splitted = wholeName.split(" ");
 			String name = "";
 			for (int i = 0; i < splitted.length - 1; i++) {
@@ -188,8 +188,8 @@ public class ExcelHelper {
 			String background = backgroundCell.getStringCellValue();
 			String teachingBack = teachingBackCell.getStringCellValue();
 			int kusisID = Integer.parseInt(kusisIDCell.getStringCellValue());
-			
-			
+
+
 			if(!mail.isEmpty()){
 				Department d = new Department(dept);
 				Assistant asst = new Assistant(name, surname, mail, d);
@@ -208,7 +208,7 @@ public class ExcelHelper {
 				asst.addAsstToDB();
 				if (!advMail.isEmpty()){
 					advMail = advMail.replaceAll("; ", ",");
-					
+
 					String[] advisors = advMail.split(",");
 					if(advisors.length > 1){
 						for (int i = 0; i < advisors.length; i++) {
@@ -246,13 +246,13 @@ public class ExcelHelper {
 
 		String code = arr[0];
 		if(arr[1].length() == 3){
-		int number = Integer.parseInt(arr[1]);
-		c = new Course(code, number);
+			int number = Integer.parseInt(arr[1]);
+			c = new Course(code, number);
 		}else{ // course bi garip bunlarin kodu 999 olsun
 			int number = 999;
 			c = new Course(code, number);
 		}
-		
+
 		return c;
 
 	}
@@ -260,7 +260,7 @@ public class ExcelHelper {
 	public void createOutputExcel(ArrayList<Course> course, ArrayList<Assistant> assistant, int[][] assignment){
 
 		XSSFWorkbook output = new XSSFWorkbook();
-		XSSFSheet outSheet = output.createSheet("Assistants");
+		XSSFSheet outSheet = output.createSheet("Result");
 
 		Row infoRow = outSheet.createRow(0);
 		Cell infoCell = infoRow.createCell(0);
@@ -271,36 +271,43 @@ public class ExcelHelper {
 		infoCell2.setCellValue("Mail");
 		infoCell3.setCellValue("Class");
 		int rowNum =1;
+		System.out.println("number of assg: "+assignment.length);
 		for (int i=0; i<assignment.length; i++)
 		{
-			
-			int asstIndex = assignment[i][0];
-			int courseIndex = assignment[i][1];
-			
-			
+			int courseIndex=0;
+			int asstIndex =0;
+			if(course.size() > assistant.size()){
+				courseIndex = assignment[i][0];
+				asstIndex = assignment[i][1];
+			}else{
+				asstIndex = assignment[i][0];
+				courseIndex = assignment[i][1];
+			}
+			System.out.println("AsstIndex :" +asstIndex +"\nCourseindex: "+courseIndex);
+
 			Assistant asst = assistant.get(asstIndex);
-				Course cour = course.get(courseIndex);
+			Course cour = course.get(courseIndex);
 
-					Row outRow = outSheet.createRow(rowNum);
-					Cell nameCell = outRow.createCell(0);
-					Cell mailCell = outRow.createCell(1);
-					Cell classCell = outRow.createCell(2);
+			Row outRow = outSheet.createRow(rowNum);
+			Cell nameCell = outRow.createCell(0);
+			Cell mailCell = outRow.createCell(1);
+			Cell classCell = outRow.createCell(2);
 
-					String firstName = asst.name;
-					String surname = asst.surname;
-					String name = firstName + " " + surname;
-					String mail = asst.mail;
+			String firstName = asst.name;
+			String surname = asst.surname;
+			String name = firstName + " " + surname;
+			String mail = asst.mail;
 
-					String courseName = cour.code;
-					int courseNumber = cour.number;
-					String className = courseName + " " + courseNumber;
+			String courseName = cour.code;
+			int courseNumber = cour.number;
+			String className = courseName + " " + courseNumber;
 
-					nameCell.setCellValue(name);
-					mailCell.setCellValue(mail);
-					classCell.setCellValue(className);
-				
-				rowNum++;
-			
+			nameCell.setCellValue(name);
+			mailCell.setCellValue(mail);
+			classCell.setCellValue(className);
+			System.out.println(name+"("+mail+")"+ "---->"+ className);
+			rowNum++;
+
 		}
 		FileOutputStream out;
 		try {

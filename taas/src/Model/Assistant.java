@@ -1,6 +1,8 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 import com.mysql.jdbc.UpdatableResultSet;
 
@@ -78,5 +80,11 @@ public class Assistant {
 
 	public String toString(){
 		return this.name + " "+this.surname + " ["+ this.mail + "]"; 
+	}
+
+
+	public HashMap<Course, Integer> getCostsForCourses(int id2) {
+		// TODO Auto-generated method stub
+		return dbh.getCostsForAssistant(id2);
 	}
 }
