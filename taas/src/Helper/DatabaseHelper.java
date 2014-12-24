@@ -1078,5 +1078,32 @@ public class DatabaseHelper {
 		}
 		return teachers;
 	}
+	
+	public boolean clearDatabase() {
+		// TODO Auto-generated method stub
+		boolean result =false;
+		Connection c;
+		try{
+			c = connectToDatabase();
+			Statement s = c.createStatement();
+			s.addBatch("delete from advisor");
+			s.addBatch("delete from teaches");
+			s.addBatch("delete from request");
+			s.addBatch("delete from assistant");
+			s.addBatch("delete from course");
+			s.addBatch("delete from instructor");
+			
+			
+			int[] r = s.executeBatch();
+			if (r[0]>0){
+				result = true;
+			}
+		}catch (InstantiationException | IllegalAccessException | SQLException e){
+			e.printStackTrace();
+			
+		
+	}
+		return result;
+	}
 
 }
