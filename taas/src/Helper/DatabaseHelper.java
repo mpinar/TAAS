@@ -22,7 +22,7 @@ public class DatabaseHelper {
 	//Database credentials.
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
 	static final String DB_URL = "jdbc:mysql://localhost:3306/";
-	static final String DB_NAME = "TAASt";
+	static final String DB_NAME = "TAAS_DB";
 	static final String DB_UNAME = "TAAS"; 
 	static final String DB_PASS = "SAAT";
 
