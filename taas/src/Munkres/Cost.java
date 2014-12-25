@@ -60,6 +60,7 @@ public class Cost {
 				dbh.addCostToDB(assistant.id,course.id,cost);
 				lastCourse = course;
 				lastCost = cost;
+				
 				courseCount++;
 			}
 
@@ -98,6 +99,18 @@ public class Cost {
 			case "MECH":
 				result = 3;
 				break;
+				
+			case "MBGE":
+				result = 7;
+				break;
+				
+			case "MASE":
+				result = 5;
+				break;
+				
+			case "PHYS":
+				result = 4;
+				break;
 
 			default:
 				break;
@@ -126,6 +139,18 @@ public class Cost {
 
 			case "MECH":
 				result = 3;
+				break;
+				
+			case "MBGE":
+				result = 7;
+				break;
+				
+			case "PHYS":
+				result = 3;
+				break;
+				
+			case "MASE":
+				result = 6;
 				break;
 
 			default:
@@ -156,6 +181,18 @@ public class Cost {
 			case "MECH":
 				result = 3;
 				break;
+				
+			case "MBGE":
+				result = 6;
+				break;
+				
+			case "MASE":
+				result = 5;
+				break;
+				
+			case "PHYS":
+				result = 4;
+				break;
 
 			default:
 				break;
@@ -167,7 +204,7 @@ public class Cost {
 
 			switch (assistantDept) {
 			case "COMP":
-				result = 4;
+				result = 5;
 				break;
 
 			case "ELEC":
@@ -183,7 +220,19 @@ public class Cost {
 				break;
 
 			case "MECH":
+				result = 4;
+				break;
+				
+			case "MBGE":
 				result = 3;
+				break;
+				
+			case "MASE":
+				result = 3;
+				break;
+				
+			case "PHYS":
+				result = 4;
 				break;
 
 			default:
@@ -214,6 +263,18 @@ public class Cost {
 			case "MECH":
 				result = 0;
 				break;
+				
+			case "MBGE":
+				result = 5;
+				break;
+				
+			case "MASE":
+				result = 4;
+				break;
+				
+			case "PHYS":
+				result = 3;
+				break;
 
 			default:
 				break;
@@ -223,7 +284,392 @@ public class Cost {
 
 		default:
 			break;
+			
+		case "MBGE":
+			switch (assistantDept) {
+			case "COMP":
+				result = 5;
+				break;
+
+			case "ELEC":
+				result = 6;
+				break;
+
+			case "INDR":
+				result = 5;
+				break;
+
+			case "CHBI":
+				result = 4;
+				break;
+
+			case "MECH":
+				result = 5;
+				break;
+				
+			case "MBGE":
+				result = 0;
+				break;
+				
+			case "MASE":
+				result = 4;
+				break;
+				
+			case "PHYS":
+				result = 6;
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+			
+		case "PHYS":
+			switch (assistantDept) {
+			case "COMP":
+				result = 6;
+				break;
+
+			case "ELEC":
+				result = 4;
+				break;
+
+			case "INDR":
+				result = 5;
+				break;
+
+			case "CHBI":
+				result = 6;
+				break;
+
+			case "MECH":
+				result = 3;
+				break;
+				
+			case "MBGE":
+				result = 6;
+				break;
+				
+			case "MASE":
+				result = 5;
+				break;
+				
+			case "PHYS":
+				result = 0;
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+			
+		case "BMSE":
+			switch (assistantDept) {
+			case "COMP":
+				result = 6;
+				break;
+
+			case "ELEC":
+				result = 7;
+				break;
+
+			case "INDR":
+				result = 5;
+				break;
+
+			case "CHBI":
+				result = 1;
+				break;
+
+			case "MECH":
+				result = 4;
+				break;
+				
+			case "MBGE":
+				result = 2;
+				break;
+				
+			case "BMSE":
+				result = 0;
+				break;
+				
+			case "MASE":
+				result = 2;
+				break;
+				
+			case "PHYS":
+				result = 6;
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+			
+		case "CHEM":
+			switch (assistantDept) {
+			case "COMP":
+				result = 6;
+				break;
+
+			case "ELEC":
+				result = 6;
+				break;
+
+			case "INDR":
+				result = 6;
+				break;
+
+			case "CHBI":
+				result = 4;
+				break;
+
+			case "MECH":
+				result = 5;
+				break;
+				
+			case "MBGE":
+				result = 2;
+				break;
+				
+			case "MASE":
+				result = 0;
+				break;
+				
+			case "BMSE":
+				result = 4;
+				break;
+				
+			case "PHYS":
+				result = 5;
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+			
+		case "EQUR":
+			switch (assistantDept) {
+			case "COMP":
+				result = 1;
+				break;
+
+			case "ELEC":
+				result = 2;
+				break;
+
+			case "INDR":
+				result = 1;
+				break;
+
+			case "CHBI":
+				result = 3;
+				break;
+
+			case "MECH":
+				result = 3;
+				break;
+				
+			case "MBGE":
+				result = 2;
+				break;
+				
+			case "MASE":
+				result = 2;
+				break;
+				
+			case "BMSE":
+				result = 3;
+				break;
+				
+			case "PHYS":
+				result = 2;
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+			
+		case "ENGR":
+			switch (assistantDept) {
+			case "COMP":
+				result = 1;
+				break;
+
+			case "ELEC":
+				result = 1;
+				break;
+
+			case "INDR":
+				result = 1;
+				break;
+
+			case "CHBI":
+				result = 1;
+				break;
+
+			case "MECH":
+				result = 1;
+				break;
+				
+			case "MBGE":
+				result = 4;
+				break;
+				
+			case "MASE":
+				result = 4;
+				break;
+				
+			case "BMSE":
+				result = 4;
+				break;
+				
+			case "PHYS":
+				result = 4;
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+			
+		case "MATH":
+			switch (assistantDept) {
+			case "COMP":
+				result = 1;
+				break;
+
+			case "ELEC":
+				result = 6;
+				break;
+
+			case "INDR":
+				result = 6;
+				break;
+
+			case "CHBI":
+				result = 4;
+				break;
+
+			case "MECH":
+				result = 5;
+				break;
+				
+			case "MBGE":
+				result = 2;
+				break;
+				
+			case "MASE":
+				result = 0;
+				break;
+				
+			case "BMSE":
+				result = 4;
+				break;
+				
+			case "PHYS":
+				result = 4;
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+			
+		case "CPAP":
+			switch (assistantDept) {
+			case "COMP":
+				result = 1;
+				break;
+
+			case "ELEC":
+				result = 1;
+				break;
+
+			case "INDR":
+				result = 1;
+				break;
+
+			case "CHBI":
+				result = 1;
+				break;
+
+			case "MECH":
+				result = 1;
+				break;
+				
+			case "MBGE":
+				result = 1;
+				break;
+				
+			case "MASE":
+				result = 1;
+				break;
+				
+			case "BMSE":
+				result = 1;
+				break;
+				
+			case "PHYS":
+				result = 1;
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+			
+		case "SCIE":
+			switch (assistantDept) {
+			case "COMP":
+				result = 6;
+				break;
+
+			case "ELEC":
+				result = 6;
+				break;
+
+			case "INDR":
+				result = 5;
+				break;
+
+			case "CHBI":
+				result = 4;
+				break;
+
+			case "MECH":
+				result = 5;
+				break;
+				
+			case "MBGE":
+				result = 3;
+				break;
+				
+			case "MASE":
+				result = 1;
+				break;
+				
+			case "PHYS":
+				result = 2;
+				break;
+
+			default:
+				break;
+			}
+
+			break;
 		}
+		
 
 		return result;
 
