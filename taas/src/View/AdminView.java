@@ -33,6 +33,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import java.awt.Color;
+import javax.swing.UIManager;
+import javax.swing.SwingConstants;
 
 public class AdminView extends JFrame {
 
@@ -71,7 +74,7 @@ public class AdminView extends JFrame {
 		dbh = new DatabaseHelper();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(6, 6, 631, 163);
+		setBounds(6, 6, 424, 209);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -79,22 +82,24 @@ public class AdminView extends JFrame {
 
 
 		JLabel lblYear = new JLabel("Year :");
-		lblYear.setBounds(39, 26, 61, 16);
+		lblYear.setHorizontalAlignment(SwingConstants.CENTER);
+		lblYear.setBounds(193, 52, 61, 16);
 		contentPane.add(lblYear);
 
 		JLabel lblSemester = new JLabel("Semester :");
-		lblSemester.setBounds(250, 25, 87, 16);
+		lblSemester.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSemester.setBounds(167, 24, 87, 16);
 		contentPane.add(lblSemester);
 
 		String[] semesters = {"FALL", "SPRING", "SUMMER"};
 		final JComboBox cbSemester = new JComboBox(semesters);
 		cbSemester.setToolTipText("Select the semester information for which the TA assignment will be done.");
-		cbSemester.setBounds(323, 21, 134, 27);
+		cbSemester.setBounds(264, 21, 136, 27);
 		contentPane.add(cbSemester);
 
 		tfYear = new JTextField();
 		tfYear.setToolTipText("Enter the year for the term that TA assignment will be done.");
-		tfYear.setBounds(86, 20, 134, 28);
+		tfYear.setBounds(266, 46, 134, 28);
 		contentPane.add(tfYear);
 		tfYear.setColumns(10);
 
@@ -118,10 +123,12 @@ public class AdminView extends JFrame {
 
 			}
 		});
-		btnSaveButton.setBounds(487, 21, 110, 29);
+		btnSaveButton.setBounds(288, 86, 110, 29);
 		contentPane.add(btnSaveButton);
 
 		JButton btnSelectFile = new JButton("Select File");
+		btnSelectFile.setBackground(new Color(0, 0, 153));
+		btnSelectFile.setForeground(Color.BLACK);
 		btnSelectFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -141,7 +148,7 @@ public class AdminView extends JFrame {
 			}
 
 		});
-		btnSelectFile.setBounds(28, 68, 130, 29);
+		btnSelectFile.setBounds(6, 19, 145, 29);
 		contentPane.add(btnSelectFile);
 
 		JButton btnCalculateCost = new JButton("Calculate Cost");
@@ -163,7 +170,7 @@ public class AdminView extends JFrame {
 				//eh.createOutputExcel(coursesxmaxasst, allAsst,assignment);
 			}
 		});
-		btnCalculateCost.setBounds(170, 68, 117, 29);
+		btnCalculateCost.setBounds(6, 61, 145, 29);
 		contentPane.add(btnCalculateCost);
 
 		JButton btnMunkres = new JButton("Assign Assistants");
@@ -205,7 +212,7 @@ public class AdminView extends JFrame {
 				eh.createOutputExcel(coursesxmaxasst, allAsst,assignment);
 			}
 		});
-		btnMunkres.setBounds(469, 68, 145, 29);
+		btnMunkres.setBounds(6, 143, 145, 29);
 		contentPane.add(btnMunkres);
 		
 		JButton btnClearDB = new JButton("Clear Database");
@@ -223,7 +230,7 @@ public class AdminView extends JFrame {
 				
 			}
 		});
-		btnClearDB.setBounds(299, 68, 158, 29);
+		btnClearDB.setBounds(6, 102, 145, 29);
 		contentPane.add(btnClearDB);
 
 

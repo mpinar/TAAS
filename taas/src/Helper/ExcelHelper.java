@@ -109,7 +109,11 @@ public class ExcelHelper {
 			String name = "";
 			for (int i = 0; i < splitted.length - 1; i++) {
 				String s = splitted[i];
+				if(i != splitted.length - 2){
 				name +=s+" ";
+				}else{
+					name +=s;
+				}
 			}
 			String surname = splitted[splitted.length - 1];
 			String mail = mailCell.getStringCellValue();
@@ -178,7 +182,11 @@ public class ExcelHelper {
 			String name = "";
 			for (int i = 0; i < splitted.length - 1; i++) {
 				String s = splitted[i];
-				name +=s+" ";
+				if(i != splitted.length - 2){
+					name +=s+" ";
+					}else{
+						name +=s;
+					}
 			}
 
 			String surname = splitted[splitted.length - 1];

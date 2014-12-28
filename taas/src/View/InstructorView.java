@@ -53,24 +53,24 @@ public class InstructorView extends JFrame {
 		dbh = new DatabaseHelper();
 		instructor = inst;
 
-	
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 688, 298);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		
+
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		JLabel lblIdentification = new JLabel("New label");
-		lblIdentification.setBounds(344, 6, 248, 16);
+		lblIdentification.setBounds(31, 25, 248, 16);
 		lblIdentification.setHorizontalAlignment(SwingConstants.CENTER);
 		lblIdentification.setText(instructor.name + " " + instructor.surname );
 		contentPane.add(lblIdentification);
 
 
 		JLabel lblCourses = new JLabel("Courses");
-		lblCourses.setBounds(28, 53, 72, 16);
+		lblCourses.setBounds(269, 25, 72, 16);
 		contentPane.add(lblCourses);
 
 		// get teaching information of Instructor.
@@ -89,13 +89,13 @@ public class InstructorView extends JFrame {
 
 
 		cbTeaching = new JComboBox(arr);
-		cbTeaching.setBounds(112, 49, 178, 27);
+		cbTeaching.setBounds(348, 21, 178, 27);
 		cbTeaching.addItemListener(new ItemChangeListener());
 
 		contentPane.add(cbTeaching);
 
 		JLabel lblAdditionalRequest = new JLabel("Additional Request :");
-		lblAdditionalRequest.setBounds(28, 200, 164, 16);
+		lblAdditionalRequest.setBounds(348, 111, 164, 16);
 		contentPane.add(lblAdditionalRequest);
 
 		tfAdditionalRequest = new JTextField();
@@ -109,7 +109,7 @@ public class InstructorView extends JFrame {
 				}
 			}
 		});
-		tfAdditionalRequest.setBounds(204, 194, 316, 28);
+		tfAdditionalRequest.setBounds(330, 136, 316, 28);
 		contentPane.add(tfAdditionalRequest);
 		tfAdditionalRequest.setColumns(10);
 
@@ -137,7 +137,7 @@ public class InstructorView extends JFrame {
 				}
 			}
 		});
-		btnSaveAdditionalRequest.setBounds(562, 195, 117, 29);
+		btnSaveAdditionalRequest.setBounds(358, 176, 117, 29);
 		btnSaveAdditionalRequest.setToolTipText("Saves addtional request.");
 		contentPane.add(btnSaveAdditionalRequest);
 
@@ -148,19 +148,19 @@ public class InstructorView extends JFrame {
 
 
 		departmentBox = new JComboBox();
-		departmentBox.setBounds(11, 150, 175, 25);
+		departmentBox.setBounds(111, 108, 128, 25);
 		contentPane.add(departmentBox);
 		departmentBox.setVisible(false);
 
 		assistantBox = new JComboBox();
-		assistantBox.setBounds(200, 150, 175, 25);
+		assistantBox.setBounds(111, 158, 128, 25);
 		contentPane.add(assistantBox);
 		assistantBox.setVisible(false);
 
 		lblRequest = new JLabel("REQUEST");
 		lblRequest.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRequest.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		lblRequest.setBounds(39, 95, 123, 43);
+		lblRequest.setBounds(6, 53, 123, 43);
 		contentPane.add(lblRequest);
 
 		btnRequest = new JButton("Request");
@@ -193,11 +193,21 @@ public class InstructorView extends JFrame {
 				}
 			}
 
-			
+
 		});
-		btnRequest.setBounds(409, 148, 117, 29);
+		btnRequest.setBounds(122, 195, 117, 29);
 		btnRequest.setVisible(false);
 		contentPane.add(btnRequest);
+
+		JLabel lblDepartment = new JLabel("Department :");
+		lblDepartment.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDepartment.setBounds(15, 111, 98, 16);
+		contentPane.add(lblDepartment);
+
+		JLabel lblAssistant = new JLabel("Assistant : ");
+		lblAssistant.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblAssistant.setBounds(15, 161, 84, 16);
+		contentPane.add(lblAssistant);
 
 
 
@@ -237,15 +247,15 @@ public class InstructorView extends JFrame {
 							departmentBox.setModel(model);
 							departmentBox.addItemListener(new ItemChangeListener());
 							departmentBox.setVisible(true);
-						
+
 						}else{
-								JLabel lblError = new JLabel("You have reached your maximum number of requests");
-								lblError.setBounds(11, 150, 400, 25);
-								contentPane.add(lblError);
-								removeRequestElements();
-								
+							JLabel lblError = new JLabel("You have reached your maximum number of requests");
+							lblError.setBounds(11, 150, 400, 25);
+							contentPane.add(lblError);
+							removeRequestElements();
+
 						}
-						
+
 						contentPane.invalidate();
 						contentPane.repaint();
 					}
@@ -283,11 +293,31 @@ public class InstructorView extends JFrame {
 				}else if(event.getSource() == assistantBox ){
 
 					if(!selected.isEmpty() && event.getStateChange() == ItemEvent.SELECTED){
-
+						String name = null,surname = null,mail = null;
 						String[] ns = selected.split(" ");
-						String name = ns[0];
-						String surname = ns[1];
-						String mail = ns[2].substring(1, ns[2].length()-1);
+						switch (ns.length) {
+						case 3:
+							name = ns[0];
+							surname = ns[1];
+							mail = ns[2].substring(1,ns[2].length()-1);
+							break;
+						case 4:
+							name = ns[0] +" "+ ns[1];
+							surname = ns[2];
+							mail = ns[3].substring(1,ns[3].length()-1);
+							break;
+						case 5:
+							name = ns[0] +" "+ ns[1] +" "+ns[2];
+							surname = ns[3];
+							mail = ns[4].substring(1,ns[4].length()-1);
+							break;
+
+						default:
+							break;
+						}
+						
+					
+					
 						System.out.println(name + " "+ surname + " " + mail);
 						Assistant a = new Assistant(name,surname,mail,selectedDepartment);
 						selectedAssistant = a;
@@ -297,12 +327,10 @@ public class InstructorView extends JFrame {
 			}
 		}       
 	}
-	
+
 	private void removeRequestElements() {
 		contentPane.remove(departmentBox);
 		contentPane.remove(assistantBox);
 		contentPane.remove(btnRequest);
 	}
-	
-	
 }

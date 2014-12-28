@@ -53,7 +53,7 @@ public class TAAS {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 550, 350);
 
-			BufferedImage image = ImageIO.read(new File("taas_bg.jpg"));
+			BufferedImage image = ImageIO.read(new File("Images/taas_bg.jpg"));
 			frame.setContentPane(new JLabel(new ImageIcon(image)));
 			frame.setSize(image.getWidth()	,image.getHeight());
 

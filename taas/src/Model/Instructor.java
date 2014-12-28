@@ -143,6 +143,7 @@ public class Instructor {
 
 	public boolean makeAssistantRequest(Course selectedCourse, Assistant selectedAssistant) {
 		// TODO Auto-generated method stub
+		//selectedAssistant.setAssistantID();
 		return dbh.insertAssistantRequest(this, selectedCourse, selectedAssistant);
 		
 	}

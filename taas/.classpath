@@ -2,14 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="Supporting Files/mysql-connector-java-5.1.34-bin.jar"/>
-	<classpathentry kind="lib" path="Supporting Files/poi-ooxml-3.10.1-20140818.jar"/>
-	<classpathentry kind="lib" path="Supporting Files/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="Supporting Files/poi-3.10.1-20140818.jar"/>
-	<classpathentry kind="lib" path="Supporting Files/poi-ooxml-schemas-3.10.1-20140818.jar"/>
-	<classpathentry kind="lib" path="Supporting Files/stax-api-1.0.1.jar"/>
-	<classpathentry kind="lib" path="Supporting Files/xmlbeans-2.6.0.jar"/>
-	<classpathentry kind="lib" path="Supporting Files/javax.mail.jar"/>
+	<classpathentry kind="lib" path="/Users/denizoztreves/git/TAAS/taas/mysql-connector-java-5.1.34-bin.jar"/>
+	<classpathentry kind="lib" path="/Users/denizoztreves/git/TAAS/taas/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/Users/denizoztreves/git/TAAS/taas/javax.mail.jar"/>
 	<classpathentry kind="lib" path="forms-1.3.0.jar" sourcepath="forms-1.3.0-src.zip"/>
+	<classpathentry kind="lib" path="poi-3.10.1-20140818.jar"/>
+	<classpathentry kind="lib" path="poi-ooxml-3.10.1-20140818.jar"/>
+	<classpathentry kind="lib" path="poi-ooxml-schemas-3.10.1-20140818.jar"/>
+	<classpathentry kind="lib" path="stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
