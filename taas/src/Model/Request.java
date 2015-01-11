@@ -1,3 +1,8 @@
+/*
+ * Created by Deniz Oztreves & Mert Pinar
+ * Copyright (c) 2014-2015 Deniz Oztreves & Mert Pinar. All rights reserved
+ * 
+ */
 package Model;
 
 public class Request {
