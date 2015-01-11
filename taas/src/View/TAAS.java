@@ -111,7 +111,7 @@ public class TAAS {
 
 						Instructor ins = dbh.getAuthorizedInstructor(username);
 						//System.out.println(ins);
-						InstructorView iv = new InstructorView(ins);
+						InstructorView iv = new InstructorView(ins,dbh);
 						frame.dispose();
 						
 						try {

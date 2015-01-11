@@ -30,7 +30,7 @@ public class ExcelHelper {
 
 	public int year;
 	public String semester;
-
+	MailHelper mh = new MailHelper();
 
 	public ArrayList<Assistant> allAssistants = new ArrayList<Assistant>();
 	public ArrayList<Course> allCourses = new ArrayList<Course>();
@@ -124,9 +124,9 @@ public class ExcelHelper {
 			if(!(name.isEmpty() || surname.isEmpty() || mail.isEmpty() || deptCode.isEmpty() )){
 				Department d = new Department(deptCode);
 				Instructor ins = new Instructor(name, surname, mail, d);
+				
 				if(!ins.checkInstructorIsInDB()){ // Instructor is not in the database. Add it.
 					//createRandomPassword 
-					MailHelper mh = new MailHelper();
 
 					String rp = EncryptionHelper.generatePass("test");
 					ins.addToDB(rp);
@@ -279,7 +279,7 @@ public class ExcelHelper {
 		infoCell2.setCellValue("Mail");
 		infoCell3.setCellValue("Class");
 		int rowNum =1;
-		System.out.println("number of assg: "+assignment.length);
+		//System.out.println("number of assg: "+assignment.length);
 		for (int i=0; i<assignment.length; i++)
 		{
 			int courseIndex=0;
@@ -291,7 +291,7 @@ public class ExcelHelper {
 				asstIndex = assignment[i][0];
 				courseIndex = assignment[i][1];
 			}
-			System.out.println("AsstIndex :" +asstIndex +"\nCourseindex: "+courseIndex);
+		//	System.out.println("AsstIndex :" +asstIndex +"\nCourseindex: "+courseIndex);
 
 			Assistant asst = assistant.get(asstIndex);
 			Course cour = course.get(courseIndex);
@@ -319,7 +319,7 @@ public class ExcelHelper {
 		}
 		FileOutputStream out;
 		try {
-			out = new FileOutputStream(new File("Assistants.xlsx"));
+			out = new FileOutputStream(new File("Assignments.xlsx"));
 			output.write(out);
 			out.close();
 

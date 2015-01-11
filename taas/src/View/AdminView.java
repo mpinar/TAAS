@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.io.File;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +34,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+
 import java.awt.Color;
+
 import javax.swing.UIManager;
 import javax.swing.SwingConstants;
 
@@ -131,7 +134,8 @@ public class AdminView extends JFrame {
 		btnSelectFile.setForeground(Color.BLACK);
 		btnSelectFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
+				
 				JFileChooser fileChooser = new JFileChooser();
 				int returnValue = fileChooser.showOpenDialog(null);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -140,9 +144,14 @@ public class AdminView extends JFrame {
 					System.out.println(fileName);
 					int option = JOptionPane.showConfirmDialog(getParent(),"You selected the file named : "+fileName);
 					if(option == JOptionPane.YES_OPTION){
+						long starttime = System.currentTimeMillis();
 						eh = new ExcelHelper(fileName);
 						readExcel();
+						long endtime = System.currentTimeMillis();
+						long time  = endtime - starttime;
+						System.out.println(time);
 						JOptionPane.showMessageDialog(getParent(), "Operation Excel reading is complete.");
+						
 					}
 				}
 			}
@@ -155,19 +164,15 @@ public class AdminView extends JFrame {
 		btnCalculateCost.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				long starttime = System.currentTimeMillis();
 				getInformation();
-				
-				
-				 // Sorts the new list in department order then the course number order.
-			
-				
 				
 				cost = new Cost(allAsst, allCourse);
 				double[][] cm = cost.calculateCost();
-			//	Hungarian hung = new Hungarian();
-				//int[][] assignment = hung.runMunkres(cm);
-				//eh = new ExcelHelper();
-				//eh.createOutputExcel(coursesxmaxasst, allAsst,assignment);
+				long endtime = System.currentTimeMillis();
+				long time  = endtime - starttime;
+				System.out.println(time);
+			
 			}
 		});
 		btnCalculateCost.setBounds(6, 61, 145, 29);
@@ -177,6 +182,7 @@ public class AdminView extends JFrame {
 		btnMunkres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				long starttime = System.currentTimeMillis();
 				getInformation();
 				double[][] cm = new double[allAsst.size()][coursesxmaxasst.size()];
 				HashMap<Course,Integer> hm ;
@@ -192,24 +198,28 @@ public class AdminView extends JFrame {
 						courseCount++;
 					}
 					
-//					for(int j=0; j<cm[i].length; j++){
-//						System.out.println(i+"."+j+") Course Count = " + courseCount);
-//					}
+
 					
 				}
-				
-				//for(int j=0; j<)
+	
+				long starttime1 = System.currentTimeMillis();
 				Hungarian hung = new Hungarian();
 				int[][] assignment = hung.runMunkres(cm);
+				long endtime1 = System.currentTimeMillis();
+				long time1  = endtime1 - starttime1;
+				System.out.println("Munkres = " + time1);
 				
-				for(int j=0; j<assignment.length; j++){
-					System.out.print("Assignment # "+j+" = ");
-					for(int k =1; k<assignment[j].length; k++){
-						System.out.print(assignment[j][k-1]+" ------> "+assignment[j][k]+"\n");	
-					}
-				}
+//				for(int j=0; j<assignment.length; j++){
+//					System.out.print("Assignment # "+j+" = ");
+//					for(int k =1; k<assignment[j].length; k++){
+//						System.out.print(assignment[j][k-1]+" ------> "+assignment[j][k]+"\n");	
+//					}
+//				}
 				eh = new ExcelHelper();
 				eh.createOutputExcel(coursesxmaxasst, allAsst,assignment);
+				long endtime = System.currentTimeMillis();
+				long time  = endtime - starttime;
+				System.out.println("Total Munkres : " +time);
 			}
 		});
 		btnMunkres.setBounds(6, 143, 145, 29);

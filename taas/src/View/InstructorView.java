@@ -48,9 +48,9 @@ public class InstructorView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public InstructorView(Instructor inst) {
+	public InstructorView(Instructor inst, DatabaseHelper debehe) {
 
-		dbh = new DatabaseHelper();
+		this.dbh = debehe;
 		instructor = inst;
 
 
